@@ -144,13 +144,6 @@
                         </div>
                     </div>
 
-                    <div class="space-y-3 mb-4 p-4 bg-slate-950 rounded-xl border border-slate-800">
-                        <label class="flex items-center gap-2 text-xs text-rose-400 cursor-pointer">
-                            <input type="checkbox" id="blacklistImeiOpt" class="rounded bg-slate-900 border-slate-700 text-rose-600">
-                            <span>Mettre l'IMEI sur liste noire (Blocage réseau national)</span>
-                        </label>
-                    </div>
-
                     <div class="flex gap-3">
                         <button id="saveDeviceBtn" type="button" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-sm font-semibold transition shadow-lg flex items-center justify-center gap-2">
                             <i class="fa-solid fa-cloud-arrow-up"></i> Enregistrer / Mettre à jour l'appareil
@@ -377,14 +370,13 @@
             const status = document.getElementById('deviceStatus').value;
             const latitude = document.getElementById('deviceLat').value.trim();
             const longitude = document.getElementById('deviceLon').value.trim();
-            const blacklistImei = document.getElementById('blacklistImeiOpt').checked;
 
             if (!imei) return alert('IMEI requis.');
 
             const res = await fetch(getApiUrl(), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ imei, status, latitude: latitude ? parseFloat(latitude) : null, longitude: longitude ? parseFloat(longitude) : null, owner: currentUsername, blacklistImei })
+                body: JSON.stringify({ imei, status, latitude: latitude ? parseFloat(latitude) : null, longitude: longitude ? parseFloat(longitude) : null, owner: currentUsername })
             });
             if (res.ok) {
                 alert('Appareil enregistré / mis à jour avec succès !');
