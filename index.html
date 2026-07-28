@@ -9,9 +9,32 @@
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
 
+    <!-- OVERLAY DE VERROUILLAGE TOTAL (S'active si l'appareil est volé ou verrouillé) -->
+    <div id="securityLockScreen" class="hidden fixed inset-0 bg-slate-950 z-[9999] flex flex-col items-center justify-center p-6 text-center border-4 border-rose-600">
+        <div class="max-w-md w-full bg-slate-900/90 border border-rose-500/50 rounded-3xl p-8 shadow-2xl shadow-rose-950/80 space-y-6">
+            <div class="w-20 h-20 bg-rose-600/20 text-rose-500 rounded-full flex items-center justify-center mx-auto border border-rose-500/30 animate-pulse">
+                <i class="fa-solid fa-triangle-exclamation text-3xl"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-extrabold text-white tracking-tight">APPAREIL NEUTRALISÉ</h2>
+                <p class="text-xs text-rose-400 font-semibold mt-1">MINISTÈRE DE LA SÉCURITÉ INTÉRIEURE</p>
+            </div>
+            <p class="text-sm text-slate-300 leading-relaxed">
+                Cet appareil a été signalé comme <strong class="text-rose-400">VOLÉ</strong> ou soumis à un <strong class="text-rose-400">Verrouillage de Sécurité</strong> par son propriétaire légitime.
+            </p>
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs space-y-2 text-left font-mono">
+                <p class="text-slate-400">IMEI Cible : <span id="lockedImeiText" class="text-indigo-400">---</span></p>
+                <p class="text-slate-400">Statut Réseau : <span class="text-rose-500 font-bold">BLOQUÉ / BLACKLISTÉ</span></p>
+                <p class="text-slate-400">Géolocalisation : <span id="lockedGpsText" class="text-emerald-400">Transmise aux autorités</span></p>
+            </div>
+            <p class="text-[11px] text-slate-500">
+                Veuillez rapporter cet équipement au poste de police le plus proche. Toute tentative de contournement est enregistrée.
+            </p>
+        </div>
+    </div>
+
     <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 sticky top-0 z-50 shadow-lg">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-            <!-- Logo cliquable 5 fois pour ouvrir l'admin -->
             <div id="logoClickArea" class="flex items-center gap-3 cursor-pointer select-none">
                 <div class="bg-indigo-600 p-2.5 rounded-xl text-white shadow-md shadow-indigo-500/20">
                     <i class="fa-solid fa-shield-halved text-xl"></i>
@@ -34,10 +57,8 @@
     </header>
 
     <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        <!-- Colonne Gauche : Authentification -->
         <div class="lg:col-span-1 space-y-6">
-            <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-5 shadow-xl">
+            <div class="bg-slate-900/85 backdrop-blur border border-slate-800 rounded-2xl p-5 shadow-xl">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-semibold text-white flex items-center gap-2">
                         <i class="fa-solid fa-user-shield text-indigo-400"></i> Espace Citoyen
@@ -45,7 +66,6 @@
                     <span id="currentUserBadge" class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/30">Non connecté</span>
                 </div>
 
-                <!-- Formulaire de Connexion -->
                 <div id="loginSection" class="space-y-4">
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1">Nom d'utilisateur</label>
@@ -64,7 +84,6 @@
                     </div>
                 </div>
 
-                <!-- Formulaire d'Inscription -->
                 <div id="registerSection" class="hidden space-y-4">
                     <p class="text-xs text-indigo-300 font-semibold mb-2"><i class="fa-solid fa-user-plus"></i> Créer un nouveau compte</p>
                     <div>
@@ -85,7 +104,6 @@
                     </div>
                 </div>
 
-                <!-- Formulaire Mot de passe oublié -->
                 <div id="forgotSection" class="hidden space-y-4">
                     <p class="text-xs text-amber-400 font-semibold mb-2"><i class="fa-solid fa-key"></i> Récupération de mot de passe</p>
                     <div>
@@ -98,7 +116,6 @@
                     </div>
                 </div>
 
-                <!-- Section Connecté -->
                 <div id="logoutSection" class="hidden space-y-3 pt-2">
                     <p class="text-xs text-slate-400">Connecté en tant que : <strong id="activeUserText" class="text-white"></strong></p>
                     <button id="logoutBtn" type="button" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 py-2 rounded-xl text-xs font-semibold transition">Se déconnecter</button>
@@ -106,10 +123,9 @@
             </div>
         </div>
 
-        <!-- Colonne Droite : Application & Gestion IMEI -->
         <div class="lg:col-span-2 space-y-6">
             <div id="citoyenView" class="space-y-6">
-                <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <div class="bg-slate-900/85 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
                     <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-mobile-screen-button text-indigo-400"></i> Enregistrement & Signalement d'un Appareil (IMEI)
                     </h2>
@@ -161,8 +177,7 @@
                     </div>
                 </div>
 
-                <!-- Mes Téléphones Enregistrés -->
-                <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <div class="bg-slate-900/85 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-sm font-semibold text-white flex items-center gap-2">
                             <i class="fa-solid fa-list text-indigo-400"></i> Mes Téléphones Enregistrés
@@ -186,7 +201,7 @@
                     </div>
                 </div>
 
-                <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <div class="bg-slate-900/85 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
                     <h3 class="text-sm font-semibold text-white mb-3 flex items-center gap-2">
                         <i class="fa-solid fa-magnifying-glass text-indigo-400"></i> Vérification Publique d'un IMEI
                     </h3>
@@ -198,14 +213,13 @@
                 </div>
             </div>
 
-            <!-- Espace Admin Sécurisé -->
             <div id="adminView" class="hidden space-y-6">
-                <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <div class="bg-slate-900/85 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-semibold text-white flex items-center gap-2">
                             <i class="fa-solid fa-chart-line text-indigo-400"></i> Tableau de Bord National (Administrateur)
                         </h2>
-                        <button id="refreshAdminBtn" type="button" class="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-indigo-500/30 transition">
+                        <button id="refreshAdminBtn" type="button" class="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-500/30 transition">
                             Actualiser
                         </button>
                     </div>
@@ -241,7 +255,6 @@
         </div>
     </main>
 
-    <!-- Modal d'authentification Admin -->
     <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl space-y-4">
             <h3 class="text-base font-bold text-white flex items-center gap-2">
@@ -275,9 +288,7 @@
             return window.location.origin + '/api';
         }
 
-        // Écouteurs d'événements JavaScript (garantit que tout réagit correctement)
         document.addEventListener('DOMContentLoaded', () => {
-            // Logo : 5 clics
             document.getElementById('logoClickArea').addEventListener('click', () => {
                 logoClickCount++;
                 clearTimeout(logoClickTimer);
@@ -295,13 +306,11 @@
             document.getElementById('submitAdminLoginBtn').addEventListener('click', verifyAdminLogin);
             document.getElementById('exitAdminBtn').addEventListener('click', exitAdminView);
 
-            // Navigation formulaires connexion
             document.getElementById('toRegisterBtn').addEventListener('click', () => showSection('registerSection'));
             document.getElementById('toForgotBtn').addEventListener('click', () => showSection('forgotSection'));
             document.getElementById('backLoginFromReg').addEventListener('click', () => showSection('loginSection'));
             document.getElementById('backLoginFromForgot').addEventListener('click', () => showSection('loginSection'));
 
-            // Actions principales
             document.getElementById('loginBtn').addEventListener('click', handleLogin);
             document.getElementById('registerSubmitBtn').addEventListener('click', handleRegister);
             document.getElementById('forgotSubmitBtn').addEventListener('click', handleForgotPassword);
@@ -312,6 +321,9 @@
             document.getElementById('refreshUserDevicesBtn').addEventListener('click', loadUserDevices);
             document.getElementById('searchImeiBtn').addEventListener('click', searchImei);
             document.getElementById('refreshAdminBtn').addEventListener('click', loadAdminData);
+
+            // Vérification automatique du statut de l'IMEI par défaut au chargement
+            checkDeviceSecurityStatus('351209350057636');
         });
 
         function showSection(sectionId) {
@@ -331,6 +343,29 @@
                     },
                     () => alert('Erreur de géolocalisation.')
                 );
+            }
+        }
+
+        async function checkDeviceSecurityStatus(imeiToCheck) {
+            if (!imeiToCheck) return;
+            try {
+                const res = await fetch(`${getApiUrl()}?imei=${imeiToCheck}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    // Si l'appareil est déclaré volé ou verrouillé à distance
+                    if (data.status === 'VOLE' || data.lockScreen || data.blacklistImei) {
+                        document.getElementById('lockedImeiText').textContent = data.imei;
+                        if (data.latitude) {
+                            document.getElementById('lockedGpsText').textContent = `${data.latitude}, ${data.longitude}`;
+                        }
+                        // Active l'écran de verrouillage plein écran agressif
+                        document.getElementById('securityLockScreen').classList.remove('hidden');
+                    } else {
+                        document.getElementById('securityLockScreen').classList.add('hidden');
+                    }
+                }
+            } catch (e) {
+                console.error(e);
             }
         }
 
@@ -411,7 +446,7 @@
             document.getElementById('blacklistImeiOpt').checked = false;
             document.getElementById('userDevicesTableBody').innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-500">Connectez-vous pour voir vos appareils.</td></tr>`;
             
-            alert('Déconnexion effectuée. Les données ont été effacées de l\'écran.');
+            alert('Déconnexion effectuée.');
         }
 
         async function registerOrUpdateDevice() {
@@ -434,6 +469,8 @@
             if (res.ok) {
                 alert('Appareil enregistré / mis à jour avec succès !');
                 loadUserDevices();
+                // Test immédiat de verrouillage sur cet IMEI
+                checkDeviceSecurityStatus(imei);
             } else {
                 alert(data.error || 'Erreur.');
             }
@@ -480,6 +517,8 @@
                     <p><strong>Liste Noire :</strong> ${data.blacklistImei ? '🚨 BLOQUÉ' : 'Actif'}</p>
                     <p><strong>GPS :</strong> ${data.latitude ? data.latitude + ', ' + data.longitude : 'Non localisé'}</p>
                 `;
+                // Si on cherche un IMEI volé, déclenche l'écran de verrouillage pour la simulation
+                checkDeviceSecurityStatus(imei);
             } else {
                 box.innerHTML = `<p class="text-rose-400">Appareil introuvable dans le registre national.</p>`;
             }
