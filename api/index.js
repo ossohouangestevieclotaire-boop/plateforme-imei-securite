@@ -1,7 +1,3 @@
-let usersDB = [];    
-let devicesDB.push = devicesDB.push || []; // Garde la structure tableau
-let devicesDB_arr = [];
-
 export default function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -19,7 +15,7 @@ export default function handler(req, res) {
   const { method } = req;
   const action = req.query.action;
 
-  // Utilisation d'un tableau global simulé propre
+  // Initialisation propre de la mémoire globale sur Vercel
   if (!global.usersMemory) global.usersMemory = [];
   if (!global.devicesMemory) global.devicesMemory = [];
 
@@ -29,13 +25,10 @@ export default function handler(req, res) {
         const { username, email, password } = req.body;
         if (!username || !email || !password) return res.status(400).json({ error: 'Tous les champs sont requis.' });
         
-        // Vérification si l'e-mail est déjà utilisé
-        const existingEmail = global.usersMemory.find(u => u.email === email);
-        if (existingEmail) {
+        if (global.usersMemory.find(u => u.email === email)) {
           return res.status(409).json({ error: 'Cet e-mail est déjà associé à un compte existant.' });
         }
-        const existingUser = global.usersMemory.find(u => u.username === username);
-        if (existingUser) {
+        if (global.usersMemory.find(u => u.username === username)) {
           return res.status(409).json({ error: 'Ce nom d\'utilisateur est déjà pris.' });
         }
 
@@ -52,7 +45,6 @@ export default function handler(req, res) {
 
       if (action === 'admin-login') {
         const { adminUser, adminPass } = req.body;
-        // Identifiants secrets de l'administrateur
         if (adminUser === 'admin' && adminPass === 'SecuriteAdmin2026*') {
           return res.status(200).json({ message: 'Accès administrateur autorisé.' });
         }
