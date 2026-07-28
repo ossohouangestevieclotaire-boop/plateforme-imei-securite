@@ -61,19 +61,35 @@ export default function handler(req, res) {
       if (!imei) return res.status(400).json({ error: 'L\'IMEI est obligatoire.' });
 
       let deviceIndex = global.devicesMemory.findIndex(d => d.imei === imei);
+      const currentTime = new Date().toISOString();
 
       if (deviceIndex !== -1) {
+        let existingDevice = global.devicesMemory[deviceIndex];
+        let history = existingDevice.history || [];
+
+        // Si de nouvelles coordonnées valides sont fournies, on les ajoute à l'historique
+        if (latitude !== undefined && longitude !== undefined && latitude !== null && longitude !== null) {
+          history.unshift({ latitude, longitude, time: currentTime });
+          // Garder uniquement les 10 dernières positions
+          if (history.length > 10) history.pop();
+        }
+
         global.devicesMemory[deviceIndex] = {
-          ...global.devicesMemory[deviceIndex],
-          status: status || global.devicesMemory[deviceIndex].status,
-          latitude: latitude !== undefined ? latitude : global.devicesMemory[deviceIndex].latitude,
-          longitude: longitude !== undefined ? longitude : global.devicesMemory[deviceIndex].longitude,
-          lockScreen: lockScreen !== undefined ? lockScreen : global.devicesMemory[deviceIndex].lockScreen,
-          blacklistImei: blacklistImei !== undefined ? blacklistImei : global.devicesMemory[deviceIndex].blacklistImei,
-          lastUpdate: new Date().toISOString()
+          ...existingDevice,
+          status: status || existingDevice.status,
+          latitude: latitude !== undefined ? latitude : existingDevice.latitude,
+          longitude: longitude !== undefined ? longitude : existingDevice.longitude,
+          lockScreen: lockScreen !== undefined ? lockScreen : existingDevice.lockScreen,
+          blacklistImei: blacklistImei !== undefined ? blacklistImei : existingDevice.blacklistImei,
+          history: history,
+          lastUpdate: currentTime
         };
         return res.status(200).json({ message: 'Appareil mis à jour.', device: global.devicesMemory[deviceIndex] });
       } else {
+        let history = [];
+        if (latitude !== null && longitude !== null) {
+          history.push({ latitude, longitude, time: currentTime });
+        }
         const newDevice = {
           imei,
           owner: owner || 'Inconnu',
@@ -82,7 +98,8 @@ export default function handler(req, res) {
           longitude: longitude || null,
           lockScreen: lockScreen || false,
           blacklistImei: blacklistImei || false,
-          lastUpdate: new Date().toISOString()
+          history: history,
+          lastUpdate: currentTime
         };
         global.devicesMemory.push(newDevice);
         return res.status(201).json({ message: 'Appareil enregistré.', device: newDevice });
