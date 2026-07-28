@@ -9,7 +9,7 @@
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
 
-    <!-- OVERLAY DE VERROUILLAGE TOTAL (S'active si l'appareil est volé ou verrouillé) -->
+    <!-- OVERLAY DE VERROUILLAGE TOTAL -->
     <div id="securityLockScreen" class="hidden fixed inset-0 bg-slate-950 z-[9999] flex flex-col items-center justify-center p-6 text-center border-4 border-rose-600">
         <div class="max-w-md w-full bg-slate-900/90 border border-rose-500/50 rounded-3xl p-8 shadow-2xl shadow-rose-950/80 space-y-6">
             <div class="w-20 h-20 bg-rose-600/20 text-rose-500 rounded-full flex items-center justify-center mx-auto border border-rose-500/30 animate-pulse">
@@ -20,16 +20,13 @@
                 <p class="text-xs text-rose-400 font-semibold mt-1">MINISTÈRE DE LA SÉCURITÉ INTÉRIEURE</p>
             </div>
             <p class="text-sm text-slate-300 leading-relaxed">
-                Cet appareil a été signalé comme <strong class="text-rose-400">VOLÉ</strong> ou soumis à un <strong class="text-rose-400">Verrouillage de Sécurité</strong> par son propriétaire légitime.
+                Cet appareil a été signalé comme <strong class="text-rose-400">VOLÉ</strong> ou soumis à un <strong class="text-rose-400">Verrouillage de Sécurité</strong>.
             </p>
             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs space-y-2 text-left font-mono">
                 <p class="text-slate-400">IMEI Cible : <span id="lockedImeiText" class="text-indigo-400">---</span></p>
                 <p class="text-slate-400">Statut Réseau : <span class="text-rose-500 font-bold">BLOQUÉ / BLACKLISTÉ</span></p>
                 <p class="text-slate-400">Géolocalisation : <span id="lockedGpsText" class="text-emerald-400">Transmise aux autorités</span></p>
             </div>
-            <p class="text-[11px] text-slate-500">
-                Veuillez rapporter cet équipement au poste de police le plus proche. Toute tentative de contournement est enregistrée.
-            </p>
         </div>
     </div>
 
@@ -69,18 +66,18 @@
                 <div id="loginSection" class="space-y-4">
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1">Nom d'utilisateur</label>
-                        <input type="text" id="loginUsername" placeholder="Ex: kassi.kouadio" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                        <input type="text" id="loginUsername" placeholder="Ex: kassi.kouadio" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1">Mot de passe</label>
-                        <input type="password" id="loginPassword" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                        <input type="password" id="loginPassword" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
                     <div class="flex justify-between items-center text-xs">
                         <button id="toForgotBtn" type="button" class="text-indigo-400 hover:underline">Mot de passe oublié ?</button>
                     </div>
                     <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button id="toRegisterBtn" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">S'inscrire</button>
-                        <button id="loginBtn" type="button" class="bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg shadow-indigo-600/30">Se connecter</button>
+                        <button id="toRegisterBtn" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold border border-slate-700">S'inscrire</button>
+                        <button id="loginBtn" type="button" class="bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-xl text-xs font-semibold shadow-lg">Se connecter</button>
                     </div>
                 </div>
 
@@ -91,7 +88,7 @@
                         <input type="text" id="regUsername" placeholder="Ex: kassi.kouadio" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Adresse E-mail Valide (Unique)</label>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Adresse E-mail</label>
                         <input type="email" id="regEmail" placeholder="nom@exemple.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
                     <div>
@@ -99,26 +96,26 @@
                         <input type="password" id="regPassword" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
                     <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button id="backLoginFromReg" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">Retour</button>
-                        <button id="registerSubmitBtn" type="button" class="bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg">Valider</button>
+                        <button id="backLoginFromReg" type="button" class="bg-slate-800 text-slate-200 py-2.5 rounded-xl text-xs font-semibold">Retour</button>
+                        <button id="registerSubmitBtn" type="button" class="bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-semibold">Valider</button>
                     </div>
                 </div>
 
                 <div id="forgotSection" class="hidden space-y-4">
-                    <p class="text-xs text-amber-400 font-semibold mb-2"><i class="fa-solid fa-key"></i> Récupération de mot de passe</p>
+                    <p class="text-xs text-amber-400 font-semibold mb-2"><i class="fa-solid fa-key"></i> Récupération</p>
                     <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Votre E-mail d'inscription</label>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Votre E-mail</label>
                         <input type="email" id="forgotEmail" placeholder="nom@exemple.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
                     <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button id="backLoginFromForgot" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">Annuler</button>
-                        <button id="forgotSubmitBtn" type="button" class="bg-amber-600 hover:bg-amber-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg">Envoyer le lien</button>
+                        <button id="backLoginFromForgot" type="button" class="bg-slate-800 text-slate-200 py-2.5 rounded-xl text-xs font-semibold">Annuler</button>
+                        <button id="forgotSubmitBtn" type="button" class="bg-amber-600 text-white py-2.5 rounded-xl text-xs font-semibold">Envoyer</button>
                     </div>
                 </div>
 
                 <div id="logoutSection" class="hidden space-y-3 pt-2">
-                    <p class="text-xs text-slate-400">Connecté en tant que : <strong id="activeUserText" class="text-white"></strong></p>
-                    <button id="logoutBtn" type="button" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 py-2 rounded-xl text-xs font-semibold transition">Se déconnecter</button>
+                    <p class="text-xs text-slate-400">Connecté : <strong id="activeUserText" class="text-white"></strong></p>
+                    <button id="logoutBtn" type="button" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 py-2 rounded-xl text-xs font-semibold">Se déconnecter</button>
                 </div>
             </div>
         </div>
@@ -156,60 +153,36 @@
                     </div>
 
                     <div class="space-y-3 mb-4 p-4 bg-slate-950 rounded-xl border border-slate-800">
-                        <p class="text-xs font-semibold text-slate-300 mb-2">Options de Sécurité & Neutralisation à Distance :</p>
+                        <p class="text-xs font-semibold text-slate-300 mb-2">Options de Sécurité :</p>
                         <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
-                            <input type="checkbox" id="lockScreenOpt" class="rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
-                            <span>Activer le verrouillage de sécurité de l'écran</span>
+                            <input type="checkbox" id="lockScreenOpt" class="rounded bg-slate-900 border-slate-700 text-indigo-600">
+                            <span>Activer le verrouillage de l'écran</span>
                         </label>
                         <label class="flex items-center gap-2 text-xs text-rose-400 cursor-pointer">
-                            <input type="checkbox" id="blacklistImeiOpt" class="rounded bg-slate-900 border-slate-700 text-rose-600 focus:ring-0">
-                            <span>Mettre l'IMEI sur liste noire (Blocage total du réseau)</span>
+                            <input type="checkbox" id="blacklistImeiOpt" class="rounded bg-slate-900 border-slate-700 text-rose-600">
+                            <span>Mettre l'IMEI sur liste noire (Réseau bloqué)</span>
                         </label>
                     </div>
 
                     <div class="flex gap-3">
-                        <button id="saveDeviceBtn" type="button" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
+                        <button id="saveDeviceBtn" type="button" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-sm font-semibold transition shadow-lg flex items-center justify-center gap-2">
                             <i class="fa-solid fa-cloud-arrow-up"></i> Enregistrer / Mettre à jour l'appareil
                         </button>
-                        <button id="gpsBtn" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-3 rounded-xl text-xs font-medium border border-slate-700 transition" title="Utiliser ma position GPS actuelle">
+                        <button id="gpsBtn" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-3 rounded-xl text-xs font-medium border border-slate-700" title="Utiliser ma position GPS actuelle">
                             <i class="fa-solid fa-location-crosshairs text-emerald-400"></i> Ma Position
                         </button>
                     </div>
                 </div>
 
                 <div class="bg-slate-900/85 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-list text-indigo-400"></i> Mes Téléphones Enregistrés
-                        </h3>
-                        <button id="refreshUserDevicesBtn" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-lg text-xs border border-slate-700 transition">Actualiser</button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs text-slate-300">
-                            <thead class="bg-slate-950 border-b border-slate-800 text-slate-400">
-                                <tr>
-                                    <th class="p-2.5">IMEI</th>
-                                    <th class="p-2.5">Statut</th>
-                                    <th class="p-2.5">Verrouillage</th>
-                                    <th class="p-2.5">Liste Noire</th>
-                                </tr>
-                            </thead>
-                            <tbody id="userDevicesTableBody" class="divide-y divide-slate-800">
-                                <tr><td colspan="4" class="p-3 text-center text-slate-500">Connectez-vous pour voir vos appareils.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900/85 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
                     <h3 class="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-magnifying-glass text-indigo-400"></i> Vérification Publique d'un IMEI
+                        <i class="fa-solid fa-magnifying-glass text-indigo-400"></i> Vérification Publique & Historique GPS d'un IMEI
                     </h3>
                     <div class="flex gap-2">
-                        <input type="text" id="searchImeiInput" value="351209350057636" placeholder="Entrez un IMEI à vérifier..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
-                        <button id="searchImeiBtn" type="button" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium border border-slate-700 transition">Vérifier</button>
+                        <input type="text" id="searchImeiInput" value="351209350057636" placeholder="Entrez un IMEI..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <button id="searchImeiBtn" type="button" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium border border-slate-700">Vérifier</button>
                     </div>
-                    <div id="searchResultBox" class="mt-4 hidden p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 space-y-1"></div>
+                    <div id="searchResultBox" class="mt-4 hidden p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 space-y-3"></div>
                 </div>
             </div>
 
@@ -217,11 +190,9 @@
                 <div class="bg-slate-900/85 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-chart-line text-indigo-400"></i> Tableau de Bord National (Administrateur)
+                            <i class="fa-solid fa-chart-line text-indigo-400"></i> Tableau de Bord Administrateur
                         </h2>
-                        <button id="refreshAdminBtn" type="button" class="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-500/30 transition">
-                            Actualiser
-                        </button>
+                        <button id="refreshAdminBtn" type="button" class="bg-indigo-600/20 text-indigo-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-500/30">Actualiser</button>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 mb-6">
@@ -230,12 +201,12 @@
                             <p id="statTotalUsers" class="text-2xl font-bold text-white mt-1">0</p>
                         </div>
                         <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                            <p class="text-xs text-slate-400">Total Appareils / IMEI</p>
+                            <p class="text-xs text-slate-400">Total Appareils</p>
                             <p id="statTotalDevices" class="text-2xl font-bold text-indigo-400 mt-1">0</p>
                         </div>
                     </div>
 
-                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Registre Central des Appareils</h3>
+                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Registre Central</h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs text-slate-300">
                             <thead class="bg-slate-950 border-b border-slate-800 text-slate-400">
@@ -243,8 +214,8 @@
                                     <th class="p-3">IMEI</th>
                                     <th class="p-3">Propriétaire</th>
                                     <th class="p-3">Statut</th>
-                                    <th class="p-3">Verrouillage</th>
-                                    <th class="p-3">Liste Noire</th>
+                                    <th class="p-3">Dernière Position GPS</th>
+                                    <th class="p-3">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="devicesTableBody" class="divide-y divide-slate-800"></tbody>
@@ -255,29 +226,26 @@
         </div>
     </main>
 
+    <!-- Modal Admin -->
     <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl space-y-4">
             <h3 class="text-base font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-lock text-rose-500"></i> Accès Réservé Administrateur
+                <i class="fa-solid fa-lock text-rose-500"></i> Accès Admin
             </h3>
             <div>
-                <label class="block text-xs font-medium text-slate-400 mb-1">Identifiant Admin</label>
-                <input type="text" id="adminUser" placeholder="admin" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
+                <label class="block text-xs font-medium text-slate-400 mb-1">Identifiant</label>
+                <input type="text" id="adminUser" value="admin" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white">
             </div>
             <div>
-                <label class="block text-xs font-medium text-slate-400 mb-1">Mot de passe Admin</label>
-                <input type="password" id="adminPass" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
+                <label class="block text-xs font-medium text-slate-400 mb-1">Mot de passe</label>
+                <input type="password" id="adminPass" value="SecuriteAdmin2026*" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white">
             </div>
             <div class="grid grid-cols-2 gap-2 pt-2">
                 <button id="closeAdminModalBtn" type="button" class="bg-slate-800 text-slate-300 py-2 rounded-xl text-xs font-semibold">Annuler</button>
-                <button id="submitAdminLoginBtn" type="button" class="bg-rose-600 hover:bg-rose-500 text-white py-2 rounded-xl text-xs font-semibold">Entrer</button>
+                <button id="submitAdminLoginBtn" type="button" class="bg-rose-600 text-white py-2 rounded-xl text-xs font-semibold">Entrer</button>
             </div>
         </div>
     </div>
-
-    <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
-        Ministère de la Sécurité Intérieure • Plateforme Souveraine de Lutte contre le Vol de Téléphones
-    </footer>
 
     <script>
         let currentUsername = null;
@@ -299,10 +267,7 @@
                 }
             });
 
-            document.getElementById('closeAdminModalBtn').addEventListener('click', () => {
-                document.getElementById('adminModal').classList.add('hidden');
-            });
-
+            document.getElementById('closeAdminModalBtn').addEventListener('click', () => document.getElementById('adminModal').classList.add('hidden'));
             document.getElementById('submitAdminLoginBtn').addEventListener('click', verifyAdminLogin);
             document.getElementById('exitAdminBtn').addEventListener('click', exitAdminView);
 
@@ -318,11 +283,9 @@
 
             document.getElementById('saveDeviceBtn').addEventListener('click', registerOrUpdateDevice);
             document.getElementById('gpsBtn').addEventListener('click', autoFillGps);
-            document.getElementById('refreshUserDevicesBtn').addEventListener('click', loadUserDevices);
             document.getElementById('searchImeiBtn').addEventListener('click', searchImei);
             document.getElementById('refreshAdminBtn').addEventListener('click', loadAdminData);
 
-            // Vérification automatique du statut de l'IMEI par défaut au chargement
             checkDeviceSecurityStatus('351209350057636');
         });
 
@@ -336,9 +299,9 @@
         function autoFillGps() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        document.getElementById('deviceLat').value = position.coords.latitude.toFixed(4);
-                        document.getElementById('deviceLon').value = position.coords.longitude.toFixed(4);
+                    (pos) => {
+                        document.getElementById('deviceLat').value = pos.coords.latitude.toFixed(4);
+                        document.getElementById('deviceLon').value = pos.coords.longitude.toFixed(4);
                         alert('Position GPS récupérée !');
                     },
                     () => alert('Erreur de géolocalisation.')
@@ -346,27 +309,23 @@
             }
         }
 
-        async function checkDeviceSecurityStatus(imeiToCheck) {
-            if (!imeiToCheck) return;
+        async function checkDeviceSecurityStatus(imei) {
+            if (!imei) return;
             try {
-                const res = await fetch(`${getApiUrl()}?imei=${imeiToCheck}`);
+                const res = await fetch(`${getApiUrl()}?imei=${imei}`);
                 if (res.ok) {
                     const data = await res.json();
-                    // Si l'appareil est déclaré volé ou verrouillé à distance
                     if (data.status === 'VOLE' || data.lockScreen || data.blacklistImei) {
                         document.getElementById('lockedImeiText').textContent = data.imei;
                         if (data.latitude) {
                             document.getElementById('lockedGpsText').textContent = `${data.latitude}, ${data.longitude}`;
                         }
-                        // Active l'écran de verrouillage plein écran agressif
                         document.getElementById('securityLockScreen').classList.remove('hidden');
                     } else {
                         document.getElementById('securityLockScreen').classList.add('hidden');
                     }
                 }
-            } catch (e) {
-                console.error(e);
-            }
+            } catch (e) { console.error(e); }
         }
 
         async function handleRegister() {
@@ -382,18 +341,14 @@
             });
             const data = await res.json();
             if (res.ok) {
-                alert('Inscription réussie ! Vous pouvez vous connecter.');
+                alert('Inscription réussie !');
                 showSection('loginSection');
-            } else {
-                alert(data.error || 'Erreur lors de l\'inscription.');
-            }
+            } else { alert(data.error); }
         }
 
         async function handleLogin() {
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
-            if (!username || !password) return alert('Veuillez entrer vos identifiants.');
-
             const res = await fetch(`${getApiUrl()}?action=login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -405,28 +360,21 @@
                 document.getElementById('currentUserBadge').textContent = 'Connecté';
                 document.getElementById('currentUserBadge').className = 'text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-500/30';
                 document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('registerSection').classList.add('hidden');
-                document.getElementById('forgotSection').classList.add('hidden');
                 document.getElementById('logoutSection').classList.remove('hidden');
                 document.getElementById('activeUserText').textContent = username;
-                loadUserDevices();
                 alert('Connexion réussie !');
-            } else {
-                alert(data.error || 'Identifiants incorrects.');
-            }
+            } else { alert(data.error); }
         }
 
         async function handleForgotPassword() {
             const email = document.getElementById('forgotEmail').value.trim();
-            if (!email) return alert('Veuillez entrer votre e-mail.');
-
             const res = await fetch(`${getApiUrl()}?action=forgot-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email })
             });
             const data = await res.json();
-            alert(res.ok ? data.message : (data.error || 'Erreur'));
+            alert(res.ok ? data.message : data.error);
             if (res.ok) showSection('loginSection');
         }
 
@@ -436,21 +384,11 @@
             document.getElementById('currentUserBadge').className = 'text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/30';
             document.getElementById('logoutSection').classList.add('hidden');
             document.getElementById('loginSection').classList.remove('hidden');
-
-            document.getElementById('loginUsername').value = '';
-            document.getElementById('loginPassword').value = '';
-            document.getElementById('deviceImei').value = '';
-            document.getElementById('deviceLat').value = '';
-            document.getElementById('deviceLon').value = '';
-            document.getElementById('lockScreenOpt').checked = false;
-            document.getElementById('blacklistImeiOpt').checked = false;
-            document.getElementById('userDevicesTableBody').innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-500">Connectez-vous pour voir vos appareils.</td></tr>`;
-            
-            alert('Déconnexion effectuée.');
+            alert('Déconnecté.');
         }
 
         async function registerOrUpdateDevice() {
-            if (!currentUsername) return alert('Veuillez vous connecter pour enregistrer un appareil.');
+            if (!currentUsername) return alert('Veuillez vous connecter.');
             const imei = document.getElementById('deviceImei').value.trim();
             const status = document.getElementById('deviceStatus').value;
             const latitude = document.getElementById('deviceLat').value.trim();
@@ -458,45 +396,17 @@
             const lockScreen = document.getElementById('lockScreenOpt').checked;
             const blacklistImei = document.getElementById('blacklistImeiOpt').checked;
 
-            if (!imei) return alert('L\'IMEI est obligatoire.');
+            if (!imei) return alert('IMEI requis.');
 
             const res = await fetch(getApiUrl(), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ imei, status, latitude: latitude ? parseFloat(latitude) : null, longitude: longitude ? parseFloat(longitude) : null, owner: currentUsername, lockScreen, blacklistImei })
             });
-            const data = await res.json();
             if (res.ok) {
-                alert('Appareil enregistré / mis à jour avec succès !');
-                loadUserDevices();
-                // Test immédiat de verrouillage sur cet IMEI
+                alert('Appareil mis à jour avec succès !');
                 checkDeviceSecurityStatus(imei);
-            } else {
-                alert(data.error || 'Erreur.');
-            }
-        }
-
-        async function loadUserDevices() {
-            if (!currentUsername) return;
-            const res = await fetch(`${getApiUrl()}?userOwner=${currentUsername}`);
-            const data = await res.json();
-            const tbody = document.getElementById('userDevicesTableBody');
-            tbody.innerHTML = '';
-
-            if (res.ok && data.devices && data.devices.length > 0) {
-                data.devices.forEach(dev => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="p-2.5 font-mono text-indigo-300">${dev.imei}</td>
-                        <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${dev.status === 'VOLE' ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}">${dev.status}</span></td>
-                        <td class="p-2.5">${dev.lockScreen ? '🔒 Verrouillé' : 'Non'}</td>
-                        <td class="p-2.5">${dev.blacklistImei ? '🚨 Blacklisté' : 'Non'}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } else {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-500">Aucun appareil enregistré à votre nom.</td></tr>`;
-            }
+            } else { alert('Erreur.'); }
         }
 
         async function searchImei() {
@@ -508,42 +418,54 @@
             const data = await res.json();
             box.classList.remove('hidden');
             if (res.ok) {
+                let mapsLink = data.latitude && data.longitude 
+                    ? `<a href="https://www.google.com/maps?q=${data.latitude},${data.longitude}" target="_blank" class="inline-flex items-center gap-1.5 text-indigo-400 hover:underline font-semibold bg-indigo-950 px-3 py-1.5 rounded-lg border border-indigo-800 mt-2"><i class="fa-solid fa-map-location-dot"></i> Voir le lieu sur Google Maps</a>`
+                    : '<span class="text-slate-500">Aucune position GPS disponible</span>';
+
+                let historyHtml = '<div class="mt-3 border-t border-slate-800 pt-2"><p class="text-xs font-semibold text-slate-400 mb-1">Historique des positions GPS :</p>';
+                if (data.history && data.history.length > 0) {
+                    historyHtml += '<ul class="space-y-1 text-[11px] font-mono">';
+                    data.history.forEach((h, idx) => {
+                        let timeStr = new Date(h.time).toLocaleTimeString();
+                        historyHtml += `<li><span class="text-slate-500">[${timeStr}]</span> Lat: ${h.latitude}, Lon: ${h.longitude} <a href="https://www.google.com/maps?q=${h.latitude},${h.longitude}" target="_blank" class="text-indigo-400 hover:underline ml-2">(Carte)</a></li>`;
+                    });
+                    historyHtml += '</ul>';
+                } else {
+                    historyHtml += '<p class="text-slate-500 text-[11px]">Aucun historique pour l\'instant.</p>';
+                }
+                historyHtml += '</div>';
+
                 box.innerHTML = `
-                    <p class="text-emerald-400 font-semibold mb-1"><i class="fa-solid fa-circle-check"></i> Trouvé dans le registre :</p>
+                    <p class="text-emerald-400 font-semibold mb-1"><i class="fa-solid fa-circle-check"></i> Fiche Appareil :</p>
                     <p><strong>IMEI :</strong> ${data.imei}</p>
                     <p><strong>Propriétaire :</strong> ${data.owner}</p>
                     <p><strong>Statut :</strong> <span class="${data.status === 'VOLE' ? 'text-rose-400 font-bold' : 'text-emerald-400'}">${data.status}</span></p>
-                    <p><strong>Verrouillage :</strong> ${data.lockScreen ? '🔒 ACTIF' : 'Inactif'}</p>
-                    <p><strong>Liste Noire :</strong> ${data.blacklistImei ? '🚨 BLOQUÉ' : 'Actif'}</p>
-                    <p><strong>GPS :</strong> ${data.latitude ? data.latitude + ', ' + data.longitude : 'Non localisé'}</p>
+                    <p><strong>Dernière Position :</strong> ${data.latitude ? data.latitude + ', ' + data.longitude : 'Non localisé'}</p>
+                    <div>${mapsLink}</div>
+                    ${historyHtml}
                 `;
-                // Si on cherche un IMEI volé, déclenche l'écran de verrouillage pour la simulation
                 checkDeviceSecurityStatus(imei);
             } else {
-                box.innerHTML = `<p class="text-rose-400">Appareil introuvable dans le registre national.</p>`;
+                box.innerHTML = `<p class="text-rose-400">Appareil introuvable.</p>`;
             }
         }
 
         async function verifyAdminLogin() {
             const adminUser = document.getElementById('adminUser').value.trim();
             const adminPass = document.getElementById('adminPass').value.trim();
-
             const res = await fetch(`${getApiUrl()}?action=admin-login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ adminUser, adminPass })
             });
-            const data = await res.json();
             if (res.ok) {
                 document.getElementById('adminModal').classList.add('hidden');
                 document.getElementById('citoyenView').classList.add('hidden');
                 document.getElementById('adminView').classList.remove('hidden');
                 document.getElementById('exitAdminBtn').classList.remove('hidden');
                 loadAdminData();
-                alert('Accès administrateur accordé.');
-            } else {
-                alert(data.error || 'Accès refusé.');
-            }
+                alert('Accès admin accordé.');
+            } else { alert('Accès refusé.'); }
         }
 
         function exitAdminView() {
@@ -558,25 +480,23 @@
             if (res.ok) {
                 document.getElementById('statTotalUsers').textContent = data.totalUsers || 0;
                 document.getElementById('statTotalDevices').textContent = data.totalDevices || 0;
-                
                 const tbody = document.getElementById('devicesTableBody');
                 tbody.innerHTML = '';
-
                 if (data.devices && data.devices.length > 0) {
                     data.devices.forEach(dev => {
+                        let mapsBtn = dev.latitude ? `<a href="https://www.google.com/maps?q=${dev.latitude},${dev.longitude}" target="_blank" class="text-indigo-400 hover:underline font-semibold"><i class="fa-solid fa-map-pin"></i> Voir le lieu</a>` : 'Non localisé';
                         const tr = document.createElement('tr');
-                        tr.className = 'hover:bg-slate-900/50 transition';
                         tr.innerHTML = `
                             <td class="p-3 font-mono text-indigo-300">${dev.imei}</td>
                             <td class="p-3">${dev.owner}</td>
                             <td class="p-3"><span class="px-2 py-1 rounded text-[10px] font-bold ${dev.status === 'VOLE' ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}">${dev.status}</span></td>
-                            <td class="p-3">${dev.lockScreen ? 'Verrouillé' : 'Non'}</td>
-                            <td class="p-3">${dev.blacklistImei ? 'Blacklisté' : 'Non'}</td>
+                            <td class="p-3 font-mono text-xs">${dev.latitude ? dev.latitude + ', ' + dev.longitude : '---'}</td>
+                            <td class="p-3">${mapsBtn}</td>
                         `;
                         tbody.appendChild(tr);
                     });
                 } else {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500">Aucun appareil enregistré.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500">Aucun appareil.</td></tr>`;
                 }
             }
         }
