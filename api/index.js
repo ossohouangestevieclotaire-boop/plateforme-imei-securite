@@ -15,10 +15,9 @@ export default function handler(req, res) {
   const { method } = req;
   const action = req.query.action;
 
-  // Initialisation globale pour éviter la perte des données en mémoire serveur
   if (!global.usersMemory) global.usersMemory = [];
   if (!global.devicesMemory) global.devicesMemory = [
-    { imei: '351209350057636', owner: 'kassi.kouadio', status: 'VOLE', latitude: 5.3600, longitude: -4.0083, blacklistImei: true, history: [{ latitude: 5.3600, longitude: -4.0083, time: new Date().toISOString() }], lastUpdate: new Date().toISOString() }
+    { imei: '351209350057636', owner: 'kassi.kouadio', status: 'VOLE', latitude: 5.3600, longitude: -4.0083, history: [{ latitude: 5.3600, longitude: -4.0083, time: new Date().toISOString() }], lastUpdate: new Date().toISOString() }
   ];
 
   switch (method) {
@@ -60,7 +59,7 @@ export default function handler(req, res) {
         return res.status(200).json({ message: 'Un lien de réinitialisation sécurisé a été envoyé à ' + email });
       }
 
-      const { imei, status, latitude, longitude, owner, blacklistImei } = req.body;
+      const { imei, status, latitude, longitude, owner } = req.body;
       if (!imei) return res.status(400).json({ error: 'L\'IMEI est obligatoire.' });
 
       let deviceIndex = global.devicesMemory.findIndex(d => d.imei === imei);
@@ -80,7 +79,6 @@ export default function handler(req, res) {
           status: status || existingDevice.status,
           latitude: latitude !== undefined ? latitude : existingDevice.latitude,
           longitude: longitude !== undefined ? longitude : existingDevice.longitude,
-          blacklistImei: blacklistImei !== undefined ? blacklistImei : existingDevice.blacklistImei,
           history: history,
           lastUpdate: currentTime
         };
@@ -96,7 +94,6 @@ export default function handler(req, res) {
           status: status || 'ACTIF',
           latitude: latitude || null,
           longitude: longitude || null,
-          blacklistImei: blacklistImei || false,
           history: history,
           lastUpdate: currentTime
         };
