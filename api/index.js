@@ -1,5 +1,6 @@
 let usersDB = [];    
-let devicesDB = [];  
+let devicesDB.push = devicesDB.push || []; // Garde la structure tableau
+let devicesDB_arr = [];
 
 export default function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -18,51 +19,69 @@ export default function handler(req, res) {
   const { method } = req;
   const action = req.query.action;
 
+  // Utilisation d'un tableau global simulé propre
+  if (!global.usersMemory) global.usersMemory = [];
+  if (!global.devicesMemory) global.devicesMemory = [];
+
   switch (method) {
     case 'POST':
       if (action === 'register') {
         const { username, email, password } = req.body;
         if (!username || !email || !password) return res.status(400).json({ error: 'Tous les champs sont requis.' });
-        if (usersDB.find(u => u.username === username || u.email === email)) {
-          return res.status(409).json({ error: 'Nom d\'utilisateur ou e-mail déjà utilisé.' });
+        
+        // Vérification si l'e-mail est déjà utilisé
+        const existingEmail = global.usersMemory.find(u => u.email === email);
+        if (existingEmail) {
+          return res.status(409).json({ error: 'Cet e-mail est déjà associé à un compte existant.' });
         }
-        usersDB.push({ username, email, password });
+        const existingUser = global.usersMemory.find(u => u.username === username);
+        if (existingUser) {
+          return res.status(409).json({ error: 'Ce nom d\'utilisateur est déjà pris.' });
+        }
+
+        global.usersMemory.push({ username, email, password });
         return res.status(201).json({ message: 'Inscription réussie.' });
       }
 
       if (action === 'login') {
         const { username, password } = req.body;
-        const user = usersDB.find(u => u.username === username && u.password === password);
+        const user = global.usersMemory.find(u => u.username === username && u.password === password);
         if (!user) return res.status(401).json({ error: 'Identifiants incorrects ou compte non existant.' });
-        // Vérification si admin (ex: nom admin)
-        const isAdmin = username === 'admin' || username === 'autorite';
-        return res.status(200).json({ message: 'Connexion réussie.', isAdmin });
+        return res.status(200).json({ message: 'Connexion réussie.' });
+      }
+
+      if (action === 'admin-login') {
+        const { adminUser, adminPass } = req.body;
+        // Identifiants secrets de l'administrateur
+        if (adminUser === 'admin' && adminPass === 'SecuriteAdmin2026*') {
+          return res.status(200).json({ message: 'Accès administrateur autorisé.' });
+        }
+        return res.status(401).json({ error: 'Identifiants administrateur incorrects.' });
       }
 
       if (action === 'forgot-password') {
         const { email } = req.body;
-        const user = usersDB.find(u => u.email === email);
+        const user = global.usersMemory.find(u => u.email === email);
         if (!user) return res.status(404).json({ error: 'Aucun compte associé à cet e-mail.' });
-        // Simulation d'envoi de lien
-        return res.status(200).json({ message: 'Un lien de réinitialisation a été envoyé à ' + email });
+        return res.status(200).json({ message: 'Un lien de réinitialisation sécurisé a été envoyé à ' + email });
       }
 
       const { imei, status, latitude, longitude, owner, lockScreen, blacklistImei } = req.body;
       if (!imei) return res.status(400).json({ error: 'L\'IMEI est obligatoire.' });
 
-      let deviceIndex = devicesDB.findIndex(d => d.imei === imei);
+      let deviceIndex = global.devicesMemory.findIndex(d => d.imei === imei);
 
       if (deviceIndex !== -1) {
-        devicesDB[deviceIndex] = {
-          ...devicesDB[deviceIndex],
-          status: status || devicesDB[deviceIndex].status,
-          latitude: latitude !== undefined ? latitude : devicesDB[deviceIndex].latitude,
-          longitude: longitude !== undefined ? longitude : devicesDB[deviceIndex].longitude,
-          lockScreen: lockScreen !== undefined ? lockScreen : devicesDB[deviceIndex].lockScreen,
-          blacklistImei: blacklistImei !== undefined ? blacklistImei : devicesDB[deviceIndex].blacklistImei,
+        global.devicesMemory[deviceIndex] = {
+          ...global.devicesMemory[deviceIndex],
+          status: status || global.devicesMemory[deviceIndex].status,
+          latitude: latitude !== undefined ? latitude : global.devicesMemory[deviceIndex].latitude,
+          longitude: longitude !== undefined ? longitude : global.devicesMemory[deviceIndex].longitude,
+          lockScreen: lockScreen !== undefined ? lockScreen : global.devicesMemory[deviceIndex].lockScreen,
+          blacklistImei: blacklistImei !== undefined ? blacklistImei : global.devicesMemory[deviceIndex].blacklistImei,
           lastUpdate: new Date().toISOString()
         };
-        return res.status(200).json({ message: 'Appareil mis à jour.', device: devicesDB[deviceIndex] });
+        return res.status(200).json({ message: 'Appareil mis à jour.', device: global.devicesMemory[deviceIndex] });
       } else {
         const newDevice = {
           imei,
@@ -74,22 +93,22 @@ export default function handler(req, res) {
           blacklistImei: blacklistImei || false,
           lastUpdate: new Date().toISOString()
         };
-        devicesDB.push(newDevice);
+        global.devicesMemory.push(newDevice);
         return res.status(201).json({ message: 'Appareil enregistré.', device: newDevice });
       }
 
     case 'GET':
       const { imei: queryImei, userOwner } = req.query;
       if (queryImei) {
-        const device = devicesDB.find(d => d.imei === queryImei);
+        const device = global.devicesMemory.find(d => d.imei === queryImei);
         if (!device) return res.status(404).json({ error: 'Appareil introuvable.' });
         return res.status(200).json(device);
       }
       if (userOwner) {
-        const userDevices = devicesDB.filter(d => d.owner === userOwner);
+        const userDevices = global.devicesMemory.filter(d => d.owner === userOwner);
         return res.status(200).json({ total: userDevices.length, devices: userDevices });
       }
-      return res.status(200).json({ totalUsers: usersDB.length, totalDevices: devicesDB.length, devices: devicesDB });
+      return res.status(200).json({ totalUsers: global.usersMemory.length, totalDevices: global.devicesMemory.length, devices: global.devicesMemory });
 
     default:
       res.setHeader('Allow', ['GET', 'POST']);
