@@ -15,7 +15,6 @@ export default function handler(req, res) {
   const { method } = req;
   const action = req.query.action;
 
-  // Initialisation propre de la mémoire globale sur Vercel
   if (!global.usersMemory) global.usersMemory = [];
   if (!global.devicesMemory) global.devicesMemory = [];
 
