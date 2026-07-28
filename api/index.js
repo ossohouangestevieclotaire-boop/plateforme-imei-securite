@@ -21,18 +21,30 @@ export default function handler(req, res) {
   switch (method) {
     case 'POST':
       if (action === 'register') {
-        const { username, password } = req.body;
-        if (!username || !password) return res.status(400).json({ error: 'Identifiants requis.' });
-        if (usersDB.find(u => u.username === username)) return res.status(409).json({ error: 'Existe déjà.' });
-        usersDB.push({ username, password });
+        const { username, email, password } = req.body;
+        if (!username || !email || !password) return res.status(400).json({ error: 'Tous les champs sont requis.' });
+        if (usersDB.find(u => u.username === username || u.email === email)) {
+          return res.status(409).json({ error: 'Nom d\'utilisateur ou e-mail déjà utilisé.' });
+        }
+        usersDB.push({ username, email, password });
         return res.status(201).json({ message: 'Inscription réussie.' });
       }
 
       if (action === 'login') {
         const { username, password } = req.body;
         const user = usersDB.find(u => u.username === username && u.password === password);
-        if (!user) return res.status(401).json({ error: 'Identifiants incorrects.' });
-        return res.status(200).json({ message: 'Connexion réussie.' });
+        if (!user) return res.status(401).json({ error: 'Identifiants incorrects ou compte non existant.' });
+        // Vérification si admin (ex: nom admin)
+        const isAdmin = username === 'admin' || username === 'autorite';
+        return res.status(200).json({ message: 'Connexion réussie.', isAdmin });
+      }
+
+      if (action === 'forgot-password') {
+        const { email } = req.body;
+        const user = usersDB.find(u => u.email === email);
+        if (!user) return res.status(404).json({ error: 'Aucun compte associé à cet e-mail.' });
+        // Simulation d'envoi de lien
+        return res.status(200).json({ message: 'Un lien de réinitialisation a été envoyé à ' + email });
       }
 
       const { imei, status, latitude, longitude, owner, lockScreen, blacklistImei } = req.body;
