@@ -23,9 +23,10 @@
             <div class="flex items-center gap-3">
                 <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-xs text-slate-300">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Serveur Actif (Vercel)</span>
+                    <span>Sécurisé en Ligne</span>
                 </div>
-                <button onclick="toggleView('admin')" id="navAdminBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 border border-slate-700">
+                <!-- Bouton Admin caché par défaut, apparaît uniquement si connecté en admin -->
+                <button onclick="toggleView('admin')" id="navAdminBtn" class="hidden bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 border border-slate-700">
                     <i class="fa-solid fa-lock text-indigo-400"></i> Espace Autorités / Admin
                 </button>
             </div>
@@ -34,59 +35,89 @@
 
     <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
 
+        <!-- Colonne Gauche : Authentification & Comptes -->
         <div class="lg:col-span-1 space-y-6">
             <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-5 shadow-xl">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-user-shield text-indigo-400"></i> Portail Citoyen / Session
+                        <i class="fa-solid fa-user-shield text-indigo-400"></i> Espace Citoyen
                     </h2>
                     <span id="currentUserBadge" class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/30">Non connecté</span>
                 </div>
 
-                <div id="authSection" class="space-y-4">
+                <!-- Formulaire de Connexion -->
+                <div id="loginSection" class="space-y-4">
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1">Nom d'utilisateur</label>
-                        <input type="text" id="authUsername" placeholder="Ex: kassi.kouadio" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                        <input type="text" id="loginUsername" placeholder="Ex: kassi.kouadio" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1">Mot de passe</label>
-                        <input type="password" id="authPassword" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                        <input type="password" id="loginPassword" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                    </div>
+                    <div class="flex justify-between items-center text-xs">
+                        <button onclick="showSection('forgotSection')" class="text-indigo-400 hover:underline">Mot de passe oublié ?</button>
                     </div>
                     <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button onclick="handleRegister()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">S'inscrire</button>
+                        <button onclick="showSection('registerSection')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">S'inscrire</button>
                         <button onclick="handleLogin()" class="bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg shadow-indigo-600/30">Se connecter</button>
                     </div>
                 </div>
 
+                <!-- Formulaire d'Inscription (Caché par défaut) -->
+                <div id="registerSection" class="hidden space-y-4">
+                    <p class="text-xs text-indigo-300 font-semibold mb-2"><i class="fa-solid fa-user-plus"></i> Créer un nouveau compte</p>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Nom d'utilisateur</label>
+                        <input type="text" id="regUsername" placeholder="Ex: kassi.kouadio" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Adresse E-mail Valide</label>
+                        <input type="email" id="regEmail" placeholder="nom@exemple.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Mot de passe</label>
+                        <input type="password" id="regPassword" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <button onclick="showSection('loginSection')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">Retour</button>
+                        <button onclick="handleRegister()" class="bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg">Valider l'inscription</button>
+                    </div>
+                </div>
+
+                <!-- Formulaire Mot de passe oublié (Caché par défaut) -->
+                <div id="forgotSection" class="hidden space-y-4">
+                    <p class="text-xs text-amber-400 font-semibold mb-2"><i class="fa-solid fa-key"></i> Récupération de mot de passe</p>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Votre E-mail d'inscription</label>
+                        <input type="email" id="forgotEmail" placeholder="nom@exemple.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <button onclick="showSection('loginSection')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">Annuler</button>
+                        <button onclick="handleForgotPassword()" class="bg-amber-600 hover:bg-amber-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg">Envoyer le lien</button>
+                    </div>
+                </div>
+
+                <!-- Section Connecté -->
                 <div id="logoutSection" class="hidden space-y-3 pt-2">
                     <p class="text-xs text-slate-400">Connecté en tant que : <strong id="activeUserText" class="text-white"></strong></p>
                     <button onclick="handleLogout()" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 py-2 rounded-xl text-xs font-semibold transition">Se déconnecter</button>
                 </div>
             </div>
-
-            <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-5 shadow-xl">
-                <h3 class="text-sm font-semibold text-white mb-2 flex items-center gap-2">
-                    <i class="fa-solid fa-server text-emerald-400"></i> URL du Serveur Vercel
-                </h3>
-                <p class="text-xs text-slate-400 mb-3">Mettez ici l'URL de votre application une fois déployée :</p>
-                <div class="flex gap-2">
-                    <input type="text" id="apiUrl" value="" placeholder="https://votre-projet.vercel.app/api" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-indigo-500">
-                    <button onclick="saveApiUrl()" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl text-xs font-medium border border-slate-700">Sauver</button>
-                </div>
-            </div>
         </div>
 
+        <!-- Colonne Droite : Application & Gestion IMEI -->
         <div class="lg:col-span-2 space-y-6">
             <div id="citoyenView" class="space-y-6">
                 <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
                     <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-mobile-screen-button text-indigo-400"></i> Gestion & Signalement d'un Appareil (IMEI)
+                        <i class="fa-solid fa-mobile-screen-button text-indigo-400"></i> Enregistrement & Signalement d'un Appareil (IMEI)
                     </h2>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1">Numéro IMEI (15 chiffres)</label>
-                            <input type="text" id="deviceImei" placeholder="Ex: 354892104857201" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Numéro IMEI (ex: 351209350057636)</label>
+                            <input type="text" id="deviceImei" value="351209350057636" placeholder="Ex: 351209350057636" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-400 mb-1">Statut de l'Appareil</label>
@@ -135,19 +166,20 @@
                         <i class="fa-solid fa-magnifying-glass text-indigo-400"></i> Vérification d'un IMEI (Statut & Neutralisation)
                     </h3>
                     <div class="flex gap-2">
-                        <input type="text" id="searchImeiInput" placeholder="Entrez un IMEI à vérifier..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <input type="text" id="searchImeiInput" value="351209350057636" placeholder="Entrez un IMEI à vérifier..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
                         <button onclick="searchImei()" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium border border-slate-700 transition">Vérifier</button>
                     </div>
                     <div id="searchResultBox" class="mt-4 hidden p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 space-y-1"></div>
                 </div>
             </div>
 
+            <!-- Espace Admin / Autorités (Caché par défaut) -->
             <div id="adminView" class="hidden space-y-6">
                 <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-semibold text-white flex items-center gap-2">
                             <i class="fa-solid fa-chart-line text-indigo-400"></i> Tableau de Bord National (Forces de l'Ordre)
-                        </h2>
+                        </h4>
                         <button onclick="loadAdminData()" class="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-indigo-500/30 transition flex items-center gap-1.5">
                             <i class="fa-solid fa-rotate"></i> Actualiser
                         </button>
@@ -192,17 +224,15 @@
     <script>
         let currentUsername = null;
 
-        // Auto-définition de l'URL de base (pointe directement sur le domaine Vercel courant)
-        window.onload = function() {
-            document.getElementById('apiUrl').value = window.location.origin + '/api';
-        };
-
         function getApiUrl() {
-            return document.getElementById('apiUrl').value.trim();
+            return window.location.origin + '/api';
         }
 
-        function saveApiUrl() {
-            alert('URL enregistrée !');
+        function showSection(sectionId) {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('registerSection').classList.add('hidden');
+            document.getElementById('forgotSection').classList.add('hidden');
+            document.getElementById(sectionId).classList.remove('hidden');
         }
 
         function toggleView(view) {
@@ -238,23 +268,29 @@
         }
 
         async function handleRegister() {
-            const username = document.getElementById('authUsername').value.trim();
-            const password = document.getElementById('authPassword').value.trim();
-            if (!username || !password) return alert('Champs requis.');
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            if (!username || !email || !password) return alert('Tous les champs sont requis.');
 
             const res = await fetch(`${getApiUrl()}?action=register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ username, email, password })
             });
             const data = await res.json();
-            alert(res.ok ? 'Inscription réussie !' : (data.error || 'Erreur'));
+            if (res.ok) {
+                alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+                showSection('loginSection');
+            } else {
+                alert(data.error || 'Erreur lors de l\'inscription.');
+            }
         }
 
         async function handleLogin() {
-            const username = document.getElementById('authUsername').value.trim();
-            const password = document.getElementById('authPassword').value.trim();
-            if (!username || !password) return alert('Champs requis.');
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            if (!username || !password) return alert('Veuillez entrer vos identifiants.');
 
             const res = await fetch(`${getApiUrl()}?action=login`, {
                 method: 'POST',
@@ -266,24 +302,50 @@
                 currentUsername = username;
                 document.getElementById('currentUserBadge').textContent = 'Connecté';
                 document.getElementById('currentUserBadge').className = 'text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-500/30';
-                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('registerSection').classList.add('hidden');
+                document.getElementById('forgotSection').classList.add('hidden');
                 document.getElementById('logoutSection').classList.remove('hidden');
                 document.getElementById('activeUserText').textContent = username;
-                alert('Connecté avec succès !');
+
+                // Si c'est l'admin, on affiche le bouton d'accès admin dans le header
+                if (data.isAdmin || username === 'admin') {
+                    document.getElementById('navAdminBtn').classList.remove('hidden');
+                }
+
+                alert('Connexion réussie !');
             } else {
-                alert(data.error || 'Identifiants incorrects.');
+                alert(data.error || 'Identifiants incorrects ou compte inexistant.');
             }
+        }
+
+        async function handleForgotPassword() {
+            const email = document.getElementById('forgotEmail').value.trim();
+            if (!email) return alert('Veuillez entrer votre e-mail.');
+
+            const res = await fetch(`${getApiUrl()}?action=forgot-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+            alert(res.ok ? data.message : (data.error || 'Erreur'));
+            if (res.ok) showSection('loginSection');
         }
 
         function handleLogout() {
             currentUsername = null;
             document.getElementById('currentUserBadge').textContent = 'Non connecté';
             document.getElementById('currentUserBadge').className = 'text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/30';
-            document.getElementById('authSection').classList.remove('hidden');
             document.getElementById('logoutSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('navAdminBtn').classList.add('hidden');
+            // Revenir en vue citoyen si on était en admin
+            toggleView('citoyen');
         }
 
         async function registerOrUpdateDevice() {
+            if (!currentUsername) return alert('Veuillez vous connecter pour enregistrer ou lier un appareil.');
             const imei = document.getElementById('deviceImei').value.trim();
             const status = document.getElementById('deviceStatus').value;
             const latitude = document.getElementById('deviceLat').value.trim();
@@ -293,12 +355,10 @@
 
             if (!imei) return alert('L\'IMEI est obligatoire.');
 
-            const owner = currentUsername ? currentUsername : 'Inconnu';
-
             const res = await fetch(getApiUrl(), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ imei, status, latitude: latitude ? parseFloat(latitude) : null, longitude: longitude ? parseFloat(longitude) : null, owner, lockScreen, blacklistImei })
+                body: JSON.stringify({ imei, status, latitude: latitude ? parseFloat(latitude) : null, longitude: longitude ? parseFloat(longitude) : null, owner: currentUsername, lockScreen, blacklistImei })
             });
             const data = await res.json();
             if (res.ok) {
@@ -327,7 +387,7 @@
                     <p><strong>Dernière Position :</strong> ${data.latitude ? data.latitude + ', ' + data.longitude : 'Non localisé'}</p>
                 `;
             } else {
-                box.innerHTML = `<p class="text-rose-400">Appareil introuvable.</p>`;
+                box.innerHTML = `<p class="text-rose-400">Appareil introuvable dans le registre national.</p>`;
             }
         }
 
