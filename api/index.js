@@ -15,8 +15,11 @@ export default function handler(req, res) {
   const { method } = req;
   const action = req.query.action;
 
+  // Initialisation globale pour éviter la perte des données en mémoire serveur
   if (!global.usersMemory) global.usersMemory = [];
-  if (!global.devicesMemory) global.devicesMemory = [];
+  if (!global.devicesMemory) global.devicesMemory = [
+    { imei: '351209350057636', owner: 'kassi.kouadio', status: 'VOLE', latitude: 5.3600, longitude: -4.0083, blacklistImei: true, history: [{ latitude: 5.3600, longitude: -4.0083, time: new Date().toISOString() }], lastUpdate: new Date().toISOString() }
+  ];
 
   switch (method) {
     case 'POST':
@@ -57,7 +60,7 @@ export default function handler(req, res) {
         return res.status(200).json({ message: 'Un lien de réinitialisation sécurisé a été envoyé à ' + email });
       }
 
-      const { imei, status, latitude, longitude, owner, lockScreen, blacklistImei } = req.body;
+      const { imei, status, latitude, longitude, owner, blacklistImei } = req.body;
       if (!imei) return res.status(400).json({ error: 'L\'IMEI est obligatoire.' });
 
       let deviceIndex = global.devicesMemory.findIndex(d => d.imei === imei);
@@ -67,10 +70,8 @@ export default function handler(req, res) {
         let existingDevice = global.devicesMemory[deviceIndex];
         let history = existingDevice.history || [];
 
-        // Si de nouvelles coordonnées valides sont fournies, on les ajoute à l'historique
         if (latitude !== undefined && longitude !== undefined && latitude !== null && longitude !== null) {
           history.unshift({ latitude, longitude, time: currentTime });
-          // Garder uniquement les 10 dernières positions
           if (history.length > 10) history.pop();
         }
 
@@ -79,7 +80,6 @@ export default function handler(req, res) {
           status: status || existingDevice.status,
           latitude: latitude !== undefined ? latitude : existingDevice.latitude,
           longitude: longitude !== undefined ? longitude : existingDevice.longitude,
-          lockScreen: lockScreen !== undefined ? lockScreen : existingDevice.lockScreen,
           blacklistImei: blacklistImei !== undefined ? blacklistImei : existingDevice.blacklistImei,
           history: history,
           lastUpdate: currentTime
@@ -87,7 +87,7 @@ export default function handler(req, res) {
         return res.status(200).json({ message: 'Appareil mis à jour.', device: global.devicesMemory[deviceIndex] });
       } else {
         let history = [];
-        if (latitude !== null && longitude !== null) {
+        if (latitude !== null && longitude !== null && latitude !== undefined && longitude !== undefined) {
           history.push({ latitude, longitude, time: currentTime });
         }
         const newDevice = {
@@ -96,7 +96,6 @@ export default function handler(req, res) {
           status: status || 'ACTIF',
           latitude: latitude || null,
           longitude: longitude || null,
-          lockScreen: lockScreen || false,
           blacklistImei: blacklistImei || false,
           history: history,
           lastUpdate: currentTime
