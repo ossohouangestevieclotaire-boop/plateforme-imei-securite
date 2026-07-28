@@ -12,7 +12,7 @@
     <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 sticky top-0 z-50 shadow-lg">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <!-- Logo cliquable 5 fois pour ouvrir l'admin -->
-            <div onclick="handleLogoClick()" class="flex items-center gap-3 cursor-pointer select-none" title="Plateforme Sécurisée">
+            <div id="logoClickArea" class="flex items-center gap-3 cursor-pointer select-none">
                 <div class="bg-indigo-600 p-2.5 rounded-xl text-white shadow-md shadow-indigo-500/20">
                     <i class="fa-solid fa-shield-halved text-xl"></i>
                 </div>
@@ -26,7 +26,7 @@
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>Sécurisé en Ligne</span>
                 </div>
-                <button onclick="exitAdminView()" id="exitAdminBtn" class="hidden bg-rose-600/20 text-rose-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-rose-500/30 transition">
+                <button id="exitAdminBtn" class="hidden bg-rose-600/20 text-rose-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-rose-500/30 transition">
                     Quitter l'Admin
                 </button>
             </div>
@@ -56,11 +56,11 @@
                         <input type="password" id="loginPassword" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
                     </div>
                     <div class="flex justify-between items-center text-xs">
-                        <button onclick="showSection('forgotSection')" class="text-indigo-400 hover:underline">Mot de passe oublié ?</button>
+                        <button id="toForgotBtn" type="button" class="text-indigo-400 hover:underline">Mot de passe oublié ?</button>
                     </div>
                     <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button onclick="showSection('registerSection')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">S'inscrire</button>
-                        <button onclick="handleLogin()" class="bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg shadow-indigo-600/30">Se connecter</button>
+                        <button id="toRegisterBtn" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">S'inscrire</button>
+                        <button id="loginBtn" type="button" class="bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg shadow-indigo-600/30">Se connecter</button>
                     </div>
                 </div>
 
@@ -80,8 +80,8 @@
                         <input type="password" id="regPassword" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
                     <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button onclick="showSection('loginSection')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">Retour</button>
-                        <button onclick="handleRegister()" class="bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg">Valider</button>
+                        <button id="backLoginFromReg" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">Retour</button>
+                        <button id="registerSubmitBtn" type="button" class="bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg">Valider</button>
                     </div>
                 </div>
 
@@ -93,15 +93,15 @@
                         <input type="email" id="forgotEmail" placeholder="nom@exemple.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
                     <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button onclick="showSection('loginSection')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">Annuler</button>
-                        <button onclick="handleForgotPassword()" class="bg-amber-600 hover:bg-amber-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg">Envoyer le lien</button>
+                        <button id="backLoginFromForgot" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">Annuler</button>
+                        <button id="forgotSubmitBtn" type="button" class="bg-amber-600 hover:bg-amber-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg">Envoyer le lien</button>
                     </div>
                 </div>
 
                 <!-- Section Connecté -->
                 <div id="logoutSection" class="hidden space-y-3 pt-2">
                     <p class="text-xs text-slate-400">Connecté en tant que : <strong id="activeUserText" class="text-white"></strong></p>
-                    <button onclick="handleLogout()" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 py-2 rounded-xl text-xs font-semibold transition">Se déconnecter</button>
+                    <button id="logoutBtn" type="button" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 py-2 rounded-xl text-xs font-semibold transition">Se déconnecter</button>
                 </div>
             </div>
         </div>
@@ -152,10 +152,10 @@
                     </div>
 
                     <div class="flex gap-3">
-                        <button onclick="registerOrUpdateDevice()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
+                        <button id="saveDeviceBtn" type="button" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
                             <i class="fa-solid fa-cloud-arrow-up"></i> Enregistrer / Mettre à jour l'appareil
                         </button>
-                        <button onclick="autoFillGps()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-3 rounded-xl text-xs font-medium border border-slate-700 transition" title="Utiliser ma position GPS actuelle">
+                        <button id="gpsBtn" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-3 rounded-xl text-xs font-medium border border-slate-700 transition" title="Utiliser ma position GPS actuelle">
                             <i class="fa-solid fa-location-crosshairs text-emerald-400"></i> Ma Position
                         </button>
                     </div>
@@ -167,7 +167,7 @@
                         <h3 class="text-sm font-semibold text-white flex items-center gap-2">
                             <i class="fa-solid fa-list text-indigo-400"></i> Mes Téléphones Enregistrés
                         </h3>
-                        <button onclick="loadUserDevices()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-lg text-xs border border-slate-700 transition">Actualiser</button>
+                        <button id="refreshUserDevicesBtn" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-lg text-xs border border-slate-700 transition">Actualiser</button>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs text-slate-300">
@@ -192,7 +192,7 @@
                     </h3>
                     <div class="flex gap-2">
                         <input type="text" id="searchImeiInput" value="351209350057636" placeholder="Entrez un IMEI à vérifier..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
-                        <button onclick="searchImei()" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium border border-slate-700 transition">Vérifier</button>
+                        <button id="searchImeiBtn" type="button" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium border border-slate-700 transition">Vérifier</button>
                     </div>
                     <div id="searchResultBox" class="mt-4 hidden p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 space-y-1"></div>
                 </div>
@@ -205,7 +205,7 @@
                         <h2 class="text-lg font-semibold text-white flex items-center gap-2">
                             <i class="fa-solid fa-chart-line text-indigo-400"></i> Tableau de Bord National (Administrateur)
                         </h2>
-                        <button onclick="loadAdminData()" class="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-indigo-500/30 transition">
+                        <button id="refreshAdminBtn" type="button" class="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-indigo-500/30 transition">
                             Actualiser
                         </button>
                     </div>
@@ -241,7 +241,7 @@
         </div>
     </main>
 
-    <!-- Modal d'authentification Admin (Caché) -->
+    <!-- Modal d'authentification Admin -->
     <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl space-y-4">
             <h3 class="text-base font-bold text-white flex items-center gap-2">
@@ -256,8 +256,8 @@
                 <input type="password" id="adminPass" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
             </div>
             <div class="grid grid-cols-2 gap-2 pt-2">
-                <button onclick="closeAdminModal()" class="bg-slate-800 text-slate-300 py-2 rounded-xl text-xs font-semibold">Annuler</button>
-                <button onclick="verifyAdminLogin()" class="bg-rose-600 hover:bg-rose-500 text-white py-2 rounded-xl text-xs font-semibold">Entrer</button>
+                <button id="closeAdminModalBtn" type="button" class="bg-slate-800 text-slate-300 py-2 rounded-xl text-xs font-semibold">Annuler</button>
+                <button id="submitAdminLoginBtn" type="button" class="bg-rose-600 hover:bg-rose-500 text-white py-2 rounded-xl text-xs font-semibold">Entrer</button>
             </div>
         </div>
     </div>
@@ -275,47 +275,44 @@
             return window.location.origin + '/api';
         }
 
-        function handleLogoClick() {
-            logoClickCount++;
-            clearTimeout(logoClickTimer);
-            logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 2000);
-            if (logoClickCount >= 5) {
-                logoClickCount = 0;
-                document.getElementById('adminModal').classList.remove('hidden');
-            }
-        }
-
-        function closeAdminModal() {
-            document.getElementById('adminModal').classList.add('hidden');
-        }
-
-        async function verifyAdminLogin() {
-            const adminUser = document.getElementById('adminUser').value.trim();
-            const adminPass = document.getElementById('adminPass').value.trim();
-
-            const res = await fetch(`${getApiUrl()}?action=admin-login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ adminUser, adminPass })
+        // Écouteurs d'événements JavaScript (garantit que tout réagit correctement)
+        document.addEventListener('DOMContentLoaded', () => {
+            // Logo : 5 clics
+            document.getElementById('logoClickArea').addEventListener('click', () => {
+                logoClickCount++;
+                clearTimeout(logoClickTimer);
+                logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 2000);
+                if (logoClickCount >= 5) {
+                    logoClickCount = 0;
+                    document.getElementById('adminModal').classList.remove('hidden');
+                }
             });
-            const data = await res.json();
-            if (res.ok) {
-                closeAdminModal();
-                document.getElementById('citoyenView').classList.add('hidden');
-                document.getElementById('adminView').classList.remove('hidden');
-                document.getElementById('exitAdminBtn').classList.remove('hidden');
-                loadAdminData();
-                alert('Accès administrateur accordé.');
-            } else {
-                alert(data.error || 'Accès refusé.');
-            }
-        }
 
-        function exitAdminView() {
-            document.getElementById('adminView').classList.add('hidden');
-            document.getElementById('exitAdminBtn').classList.add('hidden');
-            document.getElementById('citoyenView').classList.remove('hidden');
-        }
+            document.getElementById('closeAdminModalBtn').addEventListener('click', () => {
+                document.getElementById('adminModal').classList.add('hidden');
+            });
+
+            document.getElementById('submitAdminLoginBtn').addEventListener('click', verifyAdminLogin);
+            document.getElementById('exitAdminBtn').addEventListener('click', exitAdminView);
+
+            // Navigation formulaires connexion
+            document.getElementById('toRegisterBtn').addEventListener('click', () => showSection('registerSection'));
+            document.getElementById('toForgotBtn').addEventListener('click', () => showSection('forgotSection'));
+            document.getElementById('backLoginFromReg').addEventListener('click', () => showSection('loginSection'));
+            document.getElementById('backLoginFromForgot').addEventListener('click', () => showSection('loginSection'));
+
+            // Actions principales
+            document.getElementById('loginBtn').addEventListener('click', handleLogin);
+            document.getElementById('registerSubmitBtn').addEventListener('click', handleRegister);
+            document.getElementById('forgotSubmitBtn').addEventListener('click', handleForgotPassword);
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+
+            document.getElementById('saveDeviceBtn').addEventListener('click', registerOrUpdateDevice);
+            document.getElementById('gpsBtn').addEventListener('click', autoFillGps);
+            document.getElementById('refreshUserDevicesBtn').addEventListener('click', loadUserDevices);
+            document.getElementById('searchImeiBtn').addEventListener('click', searchImei);
+            document.getElementById('refreshAdminBtn').addEventListener('click', loadAdminData);
+        });
 
         function showSection(sectionId) {
             document.getElementById('loginSection').classList.add('hidden');
@@ -405,7 +402,6 @@
             document.getElementById('logoutSection').classList.add('hidden');
             document.getElementById('loginSection').classList.remove('hidden');
 
-            // Réinitialisation complète des champs formulaires
             document.getElementById('loginUsername').value = '';
             document.getElementById('loginPassword').value = '';
             document.getElementById('deviceImei').value = '';
@@ -489,6 +485,34 @@
             }
         }
 
+        async function verifyAdminLogin() {
+            const adminUser = document.getElementById('adminUser').value.trim();
+            const adminPass = document.getElementById('adminPass').value.trim();
+
+            const res = await fetch(`${getApiUrl()}?action=admin-login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ adminUser, adminPass })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById('adminModal').classList.add('hidden');
+                document.getElementById('citoyenView').classList.add('hidden');
+                document.getElementById('adminView').classList.remove('hidden');
+                document.getElementById('exitAdminBtn').classList.remove('hidden');
+                loadAdminData();
+                alert('Accès administrateur accordé.');
+            } else {
+                alert(data.error || 'Accès refusé.');
+            }
+        }
+
+        function exitAdminView() {
+            document.getElementById('adminView').classList.add('hidden');
+            document.getElementById('exitAdminBtn').classList.add('hidden');
+            document.getElementById('citoyenView').classList.remove('hidden');
+        }
+
         async function loadAdminData() {
             const res = await fetch(getApiUrl());
             const data = await res.json();
@@ -506,7 +530,7 @@
                         tr.innerHTML = `
                             <td class="p-3 font-mono text-indigo-300">${dev.imei}</td>
                             <td class="p-3">${dev.owner}</td>
-                            <td class="p-3"><span class="px-2 py-1 rounded text-[10px] font-bold ${dev.status === 'VOLE' ? 'bg-rose-500/20 text-rose-400'}">${dev.status}</span></td>
+                            <td class="p-3"><span class="px-2 py-1 rounded text-[10px] font-bold ${dev.status === 'VOLE' ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}">${dev.status}</span></td>
                             <td class="p-3">${dev.lockScreen ? 'Verrouillé' : 'Non'}</td>
                             <td class="p-3">${dev.blacklistImei ? 'Blacklisté' : 'Non'}</td>
                         `;
