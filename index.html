@@ -11,7 +11,8 @@
 
     <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 sticky top-0 z-50 shadow-lg">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
+            <!-- Logo cliquable 5 fois pour ouvrir l'admin -->
+            <div onclick="handleLogoClick()" class="flex items-center gap-3 cursor-pointer select-none" title="Plateforme Sécurisée">
                 <div class="bg-indigo-600 p-2.5 rounded-xl text-white shadow-md shadow-indigo-500/20">
                     <i class="fa-solid fa-shield-halved text-xl"></i>
                 </div>
@@ -25,9 +26,8 @@
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>Sécurisé en Ligne</span>
                 </div>
-                <!-- Bouton Admin caché par défaut, apparaît uniquement si connecté en admin -->
-                <button onclick="toggleView('admin')" id="navAdminBtn" class="hidden bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 border border-slate-700">
-                    <i class="fa-solid fa-lock text-indigo-400"></i> Espace Autorités / Admin
+                <button onclick="exitAdminView()" id="exitAdminBtn" class="hidden bg-rose-600/20 text-rose-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-rose-500/30 transition">
+                    Quitter l'Admin
                 </button>
             </div>
         </div>
@@ -35,7 +35,7 @@
 
     <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        <!-- Colonne Gauche : Authentification & Comptes -->
+        <!-- Colonne Gauche : Authentification -->
         <div class="lg:col-span-1 space-y-6">
             <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-5 shadow-xl">
                 <div class="flex items-center justify-between mb-4">
@@ -64,7 +64,7 @@
                     </div>
                 </div>
 
-                <!-- Formulaire d'Inscription (Caché par défaut) -->
+                <!-- Formulaire d'Inscription -->
                 <div id="registerSection" class="hidden space-y-4">
                     <p class="text-xs text-indigo-300 font-semibold mb-2"><i class="fa-solid fa-user-plus"></i> Créer un nouveau compte</p>
                     <div>
@@ -72,7 +72,7 @@
                         <input type="text" id="regUsername" placeholder="Ex: kassi.kouadio" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Adresse E-mail Valide</label>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Adresse E-mail Valide (Unique)</label>
                         <input type="email" id="regEmail" placeholder="nom@exemple.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
                     <div>
@@ -81,11 +81,11 @@
                     </div>
                     <div class="grid grid-cols-2 gap-2 pt-2">
                         <button onclick="showSection('loginSection')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">Retour</button>
-                        <button onclick="handleRegister()" class="bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg">Valider l'inscription</button>
+                        <button onclick="handleRegister()" class="bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg">Valider</button>
                     </div>
                 </div>
 
-                <!-- Formulaire Mot de passe oublié (Caché par défaut) -->
+                <!-- Formulaire Mot de passe oublié -->
                 <div id="forgotSection" class="hidden space-y-4">
                     <p class="text-xs text-amber-400 font-semibold mb-2"><i class="fa-solid fa-key"></i> Récupération de mot de passe</p>
                     <div>
@@ -116,7 +116,7 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1">Numéro IMEI (ex: 351209350057636)</label>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Numéro IMEI</label>
                             <input type="text" id="deviceImei" value="351209350057636" placeholder="Ex: 351209350057636" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
                         </div>
                         <div>
@@ -143,11 +143,11 @@
                         <p class="text-xs font-semibold text-slate-300 mb-2">Options de Sécurité & Neutralisation à Distance :</p>
                         <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
                             <input type="checkbox" id="lockScreenOpt" class="rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
-                            <span>Activer le verrouillage de sécurité de l'écran (Anti-accès données)</span>
+                            <span>Activer le verrouillage de sécurité de l'écran</span>
                         </label>
                         <label class="flex items-center gap-2 text-xs text-rose-400 cursor-pointer">
                             <input type="checkbox" id="blacklistImeiOpt" class="rounded bg-slate-900 border-slate-700 text-rose-600 focus:ring-0">
-                            <span>Mettre l'IMEI sur liste noire (Blocage total du réseau cellulaire)</span>
+                            <span>Mettre l'IMEI sur liste noire (Blocage total du réseau)</span>
                         </label>
                     </div>
 
@@ -161,9 +161,34 @@
                     </div>
                 </div>
 
+                <!-- Mes Téléphones Enregistrés -->
+                <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-list text-indigo-400"></i> Mes Téléphones Enregistrés
+                        </h3>
+                        <button onclick="loadUserDevices()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-lg text-xs border border-slate-700 transition">Actualiser</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-slate-300">
+                            <thead class="bg-slate-950 border-b border-slate-800 text-slate-400">
+                                <tr>
+                                    <th class="p-2.5">IMEI</th>
+                                    <th class="p-2.5">Statut</th>
+                                    <th class="p-2.5">Verrouillage</th>
+                                    <th class="p-2.5">Liste Noire</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userDevicesTableBody" class="divide-y divide-slate-800">
+                                <tr><td colspan="4" class="p-3 text-center text-slate-500">Connectez-vous pour voir vos appareils.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
                     <h3 class="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-magnifying-glass text-indigo-400"></i> Vérification d'un IMEI (Statut & Neutralisation)
+                        <i class="fa-solid fa-magnifying-glass text-indigo-400"></i> Vérification Publique d'un IMEI
                     </h3>
                     <div class="flex gap-2">
                         <input type="text" id="searchImeiInput" value="351209350057636" placeholder="Entrez un IMEI à vérifier..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
@@ -173,15 +198,15 @@
                 </div>
             </div>
 
-            <!-- Espace Admin / Autorités (Caché par défaut) -->
+            <!-- Espace Admin Sécurisé -->
             <div id="adminView" class="hidden space-y-6">
                 <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-chart-line text-indigo-400"></i> Tableau de Bord National (Forces de l'Ordre)
-                        </h4>
-                        <button onclick="loadAdminData()" class="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-indigo-500/30 transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-rotate"></i> Actualiser
+                            <i class="fa-solid fa-chart-line text-indigo-400"></i> Tableau de Bord National (Administrateur)
+                        </h2>
+                        <button onclick="loadAdminData()" class="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-indigo-500/30 transition">
+                            Actualiser
                         </button>
                     </div>
 
@@ -196,7 +221,7 @@
                         </div>
                     </div>
 
-                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Registre Central & Commandes de Blocage</h3>
+                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Registre Central des Appareils</h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs text-slate-300">
                             <thead class="bg-slate-950 border-b border-slate-800 text-slate-400">
@@ -206,7 +231,6 @@
                                     <th class="p-3">Statut</th>
                                     <th class="p-3">Verrouillage</th>
                                     <th class="p-3">Liste Noire</th>
-                                    <th class="p-3">GPS</th>
                                 </tr>
                             </thead>
                             <tbody id="devicesTableBody" class="divide-y divide-slate-800"></tbody>
@@ -217,15 +241,80 @@
         </div>
     </main>
 
+    <!-- Modal d'authentification Admin (Caché) -->
+    <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl space-y-4">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-lock text-rose-500"></i> Accès Réservé Administrateur
+            </h3>
+            <div>
+                <label class="block text-xs font-medium text-slate-400 mb-1">Identifiant Admin</label>
+                <input type="text" id="adminUser" placeholder="admin" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-slate-400 mb-1">Mot de passe Admin</label>
+                <input type="password" id="adminPass" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-2">
+                <button onclick="closeAdminModal()" class="bg-slate-800 text-slate-300 py-2 rounded-xl text-xs font-semibold">Annuler</button>
+                <button onclick="verifyAdminLogin()" class="bg-rose-600 hover:bg-rose-500 text-white py-2 rounded-xl text-xs font-semibold">Entrer</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
         Ministère de la Sécurité Intérieure • Plateforme Souveraine de Lutte contre le Vol de Téléphones
     </footer>
 
     <script>
         let currentUsername = null;
+        let logoClickCount = 0;
+        let logoClickTimer = null;
 
         function getApiUrl() {
             return window.location.origin + '/api';
+        }
+
+        function handleLogoClick() {
+            logoClickCount++;
+            clearTimeout(logoClickTimer);
+            logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 2000);
+            if (logoClickCount >= 5) {
+                logoClickCount = 0;
+                document.getElementById('adminModal').classList.remove('hidden');
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        async function verifyAdminLogin() {
+            const adminUser = document.getElementById('adminUser').value.trim();
+            const adminPass = document.getElementById('adminPass').value.trim();
+
+            const res = await fetch(`${getApiUrl()}?action=admin-login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ adminUser, adminPass })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                closeAdminModal();
+                document.getElementById('citoyenView').classList.add('hidden');
+                document.getElementById('adminView').classList.remove('hidden');
+                document.getElementById('exitAdminBtn').classList.remove('hidden');
+                loadAdminData();
+                alert('Accès administrateur accordé.');
+            } else {
+                alert(data.error || 'Accès refusé.');
+            }
+        }
+
+        function exitAdminView() {
+            document.getElementById('adminView').classList.add('hidden');
+            document.getElementById('exitAdminBtn').classList.add('hidden');
+            document.getElementById('citoyenView').classList.remove('hidden');
         }
 
         function showSection(sectionId) {
@@ -233,25 +322,6 @@
             document.getElementById('registerSection').classList.add('hidden');
             document.getElementById('forgotSection').classList.add('hidden');
             document.getElementById(sectionId).classList.remove('hidden');
-        }
-
-        function toggleView(view) {
-            const citoyenView = document.getElementById('citoyenView');
-            const adminView = document.getElementById('adminView');
-            const navAdminBtn = document.getElementById('navAdminBtn');
-
-            if (view === 'admin') {
-                citoyenView.classList.add('hidden');
-                adminView.classList.remove('hidden');
-                navAdminBtn.innerHTML = '<i class="fa-solid fa-user text-indigo-400"></i> Espace Citoyen';
-                navAdminBtn.setAttribute("onclick", "toggleView('citoyen')");
-                loadAdminData();
-            } else {
-                adminView.classList.add('hidden');
-                citoyenView.classList.remove('hidden');
-                navAdminBtn.innerHTML = '<i class="fa-solid fa-lock text-indigo-400"></i> Espace Autorités / Admin';
-                navAdminBtn.setAttribute("onclick", "toggleView('admin')");
-            }
         }
 
         function autoFillGps() {
@@ -280,7 +350,7 @@
             });
             const data = await res.json();
             if (res.ok) {
-                alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+                alert('Inscription réussie ! Vous pouvez vous connecter.');
                 showSection('loginSection');
             } else {
                 alert(data.error || 'Erreur lors de l\'inscription.');
@@ -307,15 +377,10 @@
                 document.getElementById('forgotSection').classList.add('hidden');
                 document.getElementById('logoutSection').classList.remove('hidden');
                 document.getElementById('activeUserText').textContent = username;
-
-                // Si c'est l'admin, on affiche le bouton d'accès admin dans le header
-                if (data.isAdmin || username === 'admin') {
-                    document.getElementById('navAdminBtn').classList.remove('hidden');
-                }
-
+                loadUserDevices();
                 alert('Connexion réussie !');
             } else {
-                alert(data.error || 'Identifiants incorrects ou compte inexistant.');
+                alert(data.error || 'Identifiants incorrects.');
             }
         }
 
@@ -339,13 +404,22 @@
             document.getElementById('currentUserBadge').className = 'text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/30';
             document.getElementById('logoutSection').classList.add('hidden');
             document.getElementById('loginSection').classList.remove('hidden');
-            document.getElementById('navAdminBtn').classList.add('hidden');
-            // Revenir en vue citoyen si on était en admin
-            toggleView('citoyen');
+
+            // Réinitialisation complète des champs formulaires
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('deviceImei').value = '';
+            document.getElementById('deviceLat').value = '';
+            document.getElementById('deviceLon').value = '';
+            document.getElementById('lockScreenOpt').checked = false;
+            document.getElementById('blacklistImeiOpt').checked = false;
+            document.getElementById('userDevicesTableBody').innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-500">Connectez-vous pour voir vos appareils.</td></tr>`;
+            
+            alert('Déconnexion effectuée. Les données ont été effacées de l\'écran.');
         }
 
         async function registerOrUpdateDevice() {
-            if (!currentUsername) return alert('Veuillez vous connecter pour enregistrer ou lier un appareil.');
+            if (!currentUsername) return alert('Veuillez vous connecter pour enregistrer un appareil.');
             const imei = document.getElementById('deviceImei').value.trim();
             const status = document.getElementById('deviceStatus').value;
             const latitude = document.getElementById('deviceLat').value.trim();
@@ -362,9 +436,33 @@
             });
             const data = await res.json();
             if (res.ok) {
-                alert('Appareil enregistré / mis à jour sur le serveur central !');
+                alert('Appareil enregistré / mis à jour avec succès !');
+                loadUserDevices();
             } else {
                 alert(data.error || 'Erreur.');
+            }
+        }
+
+        async function loadUserDevices() {
+            if (!currentUsername) return;
+            const res = await fetch(`${getApiUrl()}?userOwner=${currentUsername}`);
+            const data = await res.json();
+            const tbody = document.getElementById('userDevicesTableBody');
+            tbody.innerHTML = '';
+
+            if (res.ok && data.devices && data.devices.length > 0) {
+                data.devices.forEach(dev => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-2.5 font-mono text-indigo-300">${dev.imei}</td>
+                        <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${dev.status === 'VOLE' ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}">${dev.status}</span></td>
+                        <td class="p-2.5">${dev.lockScreen ? '🔒 Verrouillé' : 'Non'}</td>
+                        <td class="p-2.5">${dev.blacklistImei ? '🚨 Blacklisté' : 'Non'}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-500">Aucun appareil enregistré à votre nom.</td></tr>`;
             }
         }
 
@@ -382,9 +480,9 @@
                     <p><strong>IMEI :</strong> ${data.imei}</p>
                     <p><strong>Propriétaire :</strong> ${data.owner}</p>
                     <p><strong>Statut :</strong> <span class="${data.status === 'VOLE' ? 'text-rose-400 font-bold' : 'text-emerald-400'}">${data.status}</span></p>
-                    <p><strong>Verrouillage Écran :</strong> ${data.lockScreen ? '🔒 ACTIF (Bloqué)' : 'Déverrouillé'}</p>
-                    <p><strong>Liste Noire IMEI :</strong> ${data.blacklistImei ? '🚨 BLOQUÉ SUR LE RÉSEAU' : 'Actif'}</p>
-                    <p><strong>Dernière Position :</strong> ${data.latitude ? data.latitude + ', ' + data.longitude : 'Non localisé'}</p>
+                    <p><strong>Verrouillage :</strong> ${data.lockScreen ? '🔒 ACTIF' : 'Inactif'}</p>
+                    <p><strong>Liste Noire :</strong> ${data.blacklistImei ? '🚨 BLOQUÉ' : 'Actif'}</p>
+                    <p><strong>GPS :</strong> ${data.latitude ? data.latitude + ', ' + data.longitude : 'Non localisé'}</p>
                 `;
             } else {
                 box.innerHTML = `<p class="text-rose-400">Appareil introuvable dans le registre national.</p>`;
@@ -408,15 +506,14 @@
                         tr.innerHTML = `
                             <td class="p-3 font-mono text-indigo-300">${dev.imei}</td>
                             <td class="p-3">${dev.owner}</td>
-                            <td class="p-3"><span class="px-2 py-1 rounded text-[10px] font-bold ${dev.status === 'VOLE' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}">${dev.status}</span></td>
-                            <td class="p-3">${dev.lockScreen ? '<span class="text-amber-400 font-semibold">Verrouillé</span>' : 'Non'}</td>
-                            <td class="p-3">${dev.blacklistImei ? '<span class="text-rose-500 font-bold">Blacklisté</span>' : 'Non'}</td>
-                            <td class="p-3 font-mono text-slate-400">${dev.latitude ? dev.latitude + ', ' + dev.longitude : 'N/A'}</td>
+                            <td class="p-3"><span class="px-2 py-1 rounded text-[10px] font-bold ${dev.status === 'VOLE' ? 'bg-rose-500/20 text-rose-400'}">${dev.status}</span></td>
+                            <td class="p-3">${dev.lockScreen ? 'Verrouillé' : 'Non'}</td>
+                            <td class="p-3">${dev.blacklistImei ? 'Blacklisté' : 'Non'}</td>
                         `;
                         tbody.appendChild(tr);
                     });
                 } else {
-                    tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">Aucun appareil enregistré.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500">Aucun appareil enregistré.</td></tr>`;
                 }
             }
         }
