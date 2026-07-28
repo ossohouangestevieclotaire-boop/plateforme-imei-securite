@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plateforme Nationale de Sécurité & Traçabilité IMEI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
+
+    <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 p-2.5 rounded-xl text-white shadow-md shadow-indigo-500/20">
+                    <i class="fa-solid fa-shield-halved text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white">SÉCURITÉ NATIONALE • IMEI</h1>
+                    <p class="text-xs text-slate-400">Système Souverain de Traçabilité et de Lutte contre le Vol</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-xs text-slate-300">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Serveur Actif (Vercel)</span>
+                </div>
+                <button onclick="toggleView('admin')" id="navAdminBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 border border-slate-700">
+                    <i class="fa-solid fa-lock text-indigo-400"></i> Espace Autorités / Admin
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <div class="lg:col-span-1 space-y-6">
+            <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-5 shadow-xl">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-user-shield text-indigo-400"></i> Portail Citoyen / Session
+                    </h2>
+                    <span id="currentUserBadge" class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/30">Non connecté</span>
+                </div>
+
+                <div id="authSection" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Nom d'utilisateur</label>
+                        <input type="text" id="authUsername" placeholder="Ex: kassi.kouadio" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Mot de passe</label>
+                        <input type="password" id="authPassword" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <button onclick="handleRegister()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-semibold transition border border-slate-700">S'inscrire</button>
+                        <button onclick="handleLogin()" class="bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-lg shadow-indigo-600/30">Se connecter</button>
+                    </div>
+                </div>
+
+                <div id="logoutSection" class="hidden space-y-3 pt-2">
+                    <p class="text-xs text-slate-400">Connecté en tant que : <strong id="activeUserText" class="text-white"></strong></p>
+                    <button onclick="handleLogout()" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 py-2 rounded-xl text-xs font-semibold transition">Se déconnecter</button>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-5 shadow-xl">
+                <h3 class="text-sm font-semibold text-white mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-server text-emerald-400"></i> URL du Serveur Vercel
+                </h3>
+                <p class="text-xs text-slate-400 mb-3">Mettez ici l'URL de votre application une fois déployée :</p>
+                <div class="flex gap-2">
+                    <input type="text" id="apiUrl" value="" placeholder="https://votre-projet.vercel.app/api" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-indigo-500">
+                    <button onclick="saveApiUrl()" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl text-xs font-medium border border-slate-700">Sauver</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2 space-y-6">
+            <div id="citoyenView" class="space-y-6">
+                <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
+                    <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-mobile-screen-button text-indigo-400"></i> Gestion & Signalement d'un Appareil (IMEI)
+                    </h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Numéro IMEI (15 chiffres)</label>
+                            <input type="text" id="deviceImei" placeholder="Ex: 354892104857201" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Statut de l'Appareil</label>
+                            <select id="deviceStatus" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                                <option value="ACTIF">ACTIF (En possession)</option>
+                                <option value="VOLE">🚨 SIGNALÉ VOLÉ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Latitude (GPS)</label>
+                            <input type="text" id="deviceLat" placeholder="Ex: 5.3600" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Longitude (GPS)</label>
+                            <input type="text" id="deviceLon" placeholder="Ex: -4.0083" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 mb-4 p-4 bg-slate-950 rounded-xl border border-slate-800">
+                        <p class="text-xs font-semibold text-slate-300 mb-2">Options de Sécurité & Neutralisation à Distance :</p>
+                        <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                            <input type="checkbox" id="lockScreenOpt" class="rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
+                            <span>Activer le verrouillage de sécurité de l'écran (Anti-accès données)</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-xs text-rose-400 cursor-pointer">
+                            <input type="checkbox" id="blacklistImeiOpt" class="rounded bg-slate-900 border-slate-700 text-rose-600 focus:ring-0">
+                            <span>Mettre l'IMEI sur liste noire (Blocage total du réseau cellulaire)</span>
+                        </label>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button onclick="registerOrUpdateDevice()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Enregistrer / Mettre à jour l'appareil
+                        </button>
+                        <button onclick="autoFillGps()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-3 rounded-xl text-xs font-medium border border-slate-700 transition" title="Utiliser ma position GPS actuelle">
+                            <i class="fa-solid fa-location-crosshairs text-emerald-400"></i> Ma Position
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass text-indigo-400"></i> Vérification d'un IMEI (Statut & Neutralisation)
+                    </h3>
+                    <div class="flex gap-2">
+                        <input type="text" id="searchImeiInput" placeholder="Entrez un IMEI à vérifier..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <button onclick="searchImei()" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium border border-slate-700 transition">Vérifier</button>
+                    </div>
+                    <div id="searchResultBox" class="mt-4 hidden p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 space-y-1"></div>
+                </div>
+            </div>
+
+            <div id="adminView" class="hidden space-y-6">
+                <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-indigo-400"></i> Tableau de Bord National (Forces de l'Ordre)
+                        </h2>
+                        <button onclick="loadAdminData()" class="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-indigo-500/30 transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-rotate"></i> Actualiser
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                            <p class="text-xs text-slate-400">Total Utilisateurs</p>
+                            <p id="statTotalUsers" class="text-2xl font-bold text-white mt-1">0</p>
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                            <p class="text-xs text-slate-400">Total Appareils / IMEI</p>
+                            <p id="statTotalDevices" class="text-2xl font-bold text-indigo-400 mt-1">0</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Registre Central & Commandes de Blocage</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-slate-300">
+                            <thead class="bg-slate-950 border-b border-slate-800 text-slate-400">
+                                <tr>
+                                    <th class="p-3">IMEI</th>
+                                    <th class="p-3">Propriétaire</th>
+                                    <th class="p-3">Statut</th>
+                                    <th class="p-3">Verrouillage</th>
+                                    <th class="p-3">Liste Noire</th>
+                                    <th class="p-3">GPS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="devicesTableBody" class="divide-y divide-slate-800"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
+        Ministère de la Sécurité Intérieure • Plateforme Souveraine de Lutte contre le Vol de Téléphones
+    </footer>
+
+    <script>
+        let currentUsername = null;
+
+        // Auto-définition de l'URL de base (pointe directement sur le domaine Vercel courant)
+        window.onload = function() {
+            document.getElementById('apiUrl').value = window.location.origin + '/api';
+        };
+
+        function getApiUrl() {
+            return document.getElementById('apiUrl').value.trim();
+        }
+
+        function saveApiUrl() {
+            alert('URL enregistrée !');
+        }
+
+        function toggleView(view) {
+            const citoyenView = document.getElementById('citoyenView');
+            const adminView = document.getElementById('adminView');
+            const navAdminBtn = document.getElementById('navAdminBtn');
+
+            if (view === 'admin') {
+                citoyenView.classList.add('hidden');
+                adminView.classList.remove('hidden');
+                navAdminBtn.innerHTML = '<i class="fa-solid fa-user text-indigo-400"></i> Espace Citoyen';
+                navAdminBtn.setAttribute("onclick", "toggleView('citoyen')");
+                loadAdminData();
+            } else {
+                adminView.classList.add('hidden');
+                citoyenView.classList.remove('hidden');
+                navAdminBtn.innerHTML = '<i class="fa-solid fa-lock text-indigo-400"></i> Espace Autorités / Admin';
+                navAdminBtn.setAttribute("onclick", "toggleView('admin')");
+            }
+        }
+
+        function autoFillGps() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        document.getElementById('deviceLat').value = position.coords.latitude.toFixed(4);
+                        document.getElementById('deviceLon').value = position.coords.longitude.toFixed(4);
+                        alert('Position GPS récupérée !');
+                    },
+                    () => alert('Erreur de géolocalisation.')
+                );
+            }
+        }
+
+        async function handleRegister() {
+            const username = document.getElementById('authUsername').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+            if (!username || !password) return alert('Champs requis.');
+
+            const res = await fetch(`${getApiUrl()}?action=register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            alert(res.ok ? 'Inscription réussie !' : (data.error || 'Erreur'));
+        }
+
+        async function handleLogin() {
+            const username = document.getElementById('authUsername').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+            if (!username || !password) return alert('Champs requis.');
+
+            const res = await fetch(`${getApiUrl()}?action=login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                currentUsername = username;
+                document.getElementById('currentUserBadge').textContent = 'Connecté';
+                document.getElementById('currentUserBadge').className = 'text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-500/30';
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('logoutSection').classList.remove('hidden');
+                document.getElementById('activeUserText').textContent = username;
+                alert('Connecté avec succès !');
+            } else {
+                alert(data.error || 'Identifiants incorrects.');
+            }
+        }
+
+        function handleLogout() {
+            currentUsername = null;
+            document.getElementById('currentUserBadge').textContent = 'Non connecté';
+            document.getElementById('currentUserBadge').className = 'text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/30';
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('logoutSection').classList.add('hidden');
+        }
+
+        async function registerOrUpdateDevice() {
+            const imei = document.getElementById('deviceImei').value.trim();
+            const status = document.getElementById('deviceStatus').value;
+            const latitude = document.getElementById('deviceLat').value.trim();
+            const longitude = document.getElementById('deviceLon').value.trim();
+            const lockScreen = document.getElementById('lockScreenOpt').checked;
+            const blacklistImei = document.getElementById('blacklistImeiOpt').checked;
+
+            if (!imei) return alert('L\'IMEI est obligatoire.');
+
+            const owner = currentUsername ? currentUsername : 'Inconnu';
+
+            const res = await fetch(getApiUrl(), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ imei, status, latitude: latitude ? parseFloat(latitude) : null, longitude: longitude ? parseFloat(longitude) : null, owner, lockScreen, blacklistImei })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                alert('Appareil enregistré / mis à jour sur le serveur central !');
+            } else {
+                alert(data.error || 'Erreur.');
+            }
+        }
+
+        async function searchImei() {
+            const imei = document.getElementById('searchImeiInput').value.trim();
+            const box = document.getElementById('searchResultBox');
+            if (!imei) return alert('Entrez un IMEI.');
+
+            const res = await fetch(`${getApiUrl()}?imei=${imei}`);
+            const data = await res.json();
+            box.classList.remove('hidden');
+            if (res.ok) {
+                box.innerHTML = `
+                    <p class="text-emerald-400 font-semibold mb-1"><i class="fa-solid fa-circle-check"></i> Trouvé dans le registre :</p>
+                    <p><strong>IMEI :</strong> ${data.imei}</p>
+                    <p><strong>Propriétaire :</strong> ${data.owner}</p>
+                    <p><strong>Statut :</strong> <span class="${data.status === 'VOLE' ? 'text-rose-400 font-bold' : 'text-emerald-400'}">${data.status}</span></p>
+                    <p><strong>Verrouillage Écran :</strong> ${data.lockScreen ? '🔒 ACTIF (Bloqué)' : 'Déverrouillé'}</p>
+                    <p><strong>Liste Noire IMEI :</strong> ${data.blacklistImei ? '🚨 BLOQUÉ SUR LE RÉSEAU' : 'Actif'}</p>
+                    <p><strong>Dernière Position :</strong> ${data.latitude ? data.latitude + ', ' + data.longitude : 'Non localisé'}</p>
+                `;
+            } else {
+                box.innerHTML = `<p class="text-rose-400">Appareil introuvable.</p>`;
+            }
+        }
+
+        async function loadAdminData() {
+            const res = await fetch(getApiUrl());
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById('statTotalUsers').textContent = data.totalUsers || 0;
+                document.getElementById('statTotalDevices').textContent = data.totalDevices || 0;
+                
+                const tbody = document.getElementById('devicesTableBody');
+                tbody.innerHTML = '';
+
+                if (data.devices && data.devices.length > 0) {
+                    data.devices.forEach(dev => {
+                        const tr = document.createElement('tr');
+                        tr.className = 'hover:bg-slate-900/50 transition';
+                        tr.innerHTML = `
+                            <td class="p-3 font-mono text-indigo-300">${dev.imei}</td>
+                            <td class="p-3">${dev.owner}</td>
+                            <td class="p-3"><span class="px-2 py-1 rounded text-[10px] font-bold ${dev.status === 'VOLE' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}">${dev.status}</span></td>
+                            <td class="p-3">${dev.lockScreen ? '<span class="text-amber-400 font-semibold">Verrouillé</span>' : 'Non'}</td>
+                            <td class="p-3">${dev.blacklistImei ? '<span class="text-rose-500 font-bold">Blacklisté</span>' : 'Non'}</td>
+                            <td class="p-3 font-mono text-slate-400">${dev.latitude ? dev.latitude + ', ' + dev.longitude : 'N/A'}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">Aucun appareil enregistré.</td></tr>`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
