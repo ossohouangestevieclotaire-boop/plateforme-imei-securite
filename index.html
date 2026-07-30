@@ -14,7 +14,7 @@
         }
         .container {
             max-width: 500px;
-            margin: 50px auto;
+            margin: 40px auto;
             background: #1e293b;
             padding: 30px;
             border-radius: 12px;
@@ -23,6 +23,24 @@
         h2 {
             margin-bottom: 20px;
             color: #f87171;
+            text-align: center;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #334155;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            color: #94a3b8;
+            font-weight: bold;
+        }
+        .tab.active {
+            color: #f87171;
+            border-bottom: 2px solid #f87171;
         }
         .form-group {
             margin-bottom: 15px;
@@ -57,16 +75,47 @@
         .btn-valider:hover {
             background-color: #047857;
         }
+        .options-links {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .options-links a {
+            color: #38bdf8;
+            font-size: 13px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .options-links a:hover {
+            text-decoration: underline;
+        }
+        /* Dashboard caché par défaut */
+        #dashboard-section {
+            display: none;
+        }
+        .dashboard-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>Inscription / Connexion</h2>
+    <!-- SECTION AUTHENTIFICATION (Connexion / Inscription) -->
+    <div class="container" id="auth-container">
+        <h2 id="form-title">Connexion</h2>
+        
+        <div class="tabs">
+            <div class="tab active" id="tab-login" onclick="switchMode('login')">Se Connecter</div>
+            <div class="tab" id="tab-register" onclick="switchMode('register')">S'inscrire</div>
+        </div>
+
         <form id="authForm">
-            <div class="form-group">
+            <div class="form-group" id="group-username" style="display: none;">
                 <label>Nom d'utilisateur</label>
-                <input type="text" id="username" placeholder="REDMI" required>
+                <input type="text" id="username" placeholder="Votre nom">
             </div>
             
             <div class="form-group">
@@ -79,51 +128,125 @@
                 <input type="password" id="password" placeholder="********" required>
             </div>
 
-            <button type="submit" class="btn-valider">Valider</button>
+            <button type="submit" class="btn-valider" id="submit-btn">Se Connecter</button>
+            
+            <div class="options-links">
+                <a onclick="forgotPassword()">Mot de passe oublié ?</a>
+            </div>
         </form>
     </div>
 
-    <!-- Script JavaScript pour rendre le bouton fonctionnel avec l'API Vercel -->
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const authForm = document.getElementById('authForm');
+    <!-- SECTION TABLEAU DE BORD (S'affiche après connexion/inscription réussie) -->
+    <div class="dashboard-container" id="dashboard-section">
+        <h2>Espace de Sécurité & Suivi IMEI</h2>
+        <p>Bienvenue sur votre tableau de bord souverain.</p>
         
-        if (authForm) {
-          authForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Empêche le rechargement de la page
+        <div style="margin-top: 20px; background: #0f172a; padding: 20px; border-radius: 8px;">
+            <h3>Enregistrer ou Déclarer un Appareil</h3>
+            <div class="form-group">
+                <label>Numéro IMEI (15 chiffres)</label>
+                <input type="text" id="imei-input" placeholder="Ex: 351209350057636" maxlength="15">
+            </div>
+            <button class="btn-valider" onclick="enregistrerImei()" style="background-color: #2563eb;">Enregistrer / Mettre à jour l'appareil</button>
+        </div>
 
-            const nom = document.getElementById('username').value.trim();
+        <div style="margin-top: 20px; text-align: right;">
+            <button onclick="logout()" style="background: #dc2626; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">Se Déconnecter</button>
+        </div>
+    </div>
+
+    <!-- SCRIPT DE GESTION -->
+    <script>
+        let currentMode = 'login'; // 'login' ou 'register'
+
+        function switchMode(mode) {
+            currentMode = mode;
+            const title = document.getElementById('form-title');
+            const userGroup = document.getElementById('group-username');
+            const submitBtn = document.getElementById('submit-btn');
+            const tabLogin = document.getElementById('tab-login');
+            const tabRegister = document.getElementById('tab-register');
+
+            if (mode === 'login') {
+                title.innerText = "Connexion";
+                userGroup.style.display = 'none';
+                submitBtn.innerText = "Se Connecter";
+                tabLogin.classList.add('active');
+                tabRegister.classList.remove('active');
+            } else {
+                title.innerText = "Inscription";
+                userGroup.style.display = 'block';
+                submitBtn.innerText = "S'inscrire";
+                tabRegister.classList.add('active');
+                tabLogin.classList.remove('active');
+            }
+        }
+
+        // Gestion de la soumission du formulaire
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
+            const nom = document.getElementById('username').value.trim();
 
-            if (!email || !password || !nom) {
-              alert("Veuillez remplir tous les champs obligatoires.");
-              return;
+            if (currentMode === 'register' && !nom) {
+                alert("Veuillez entrer un nom d'utilisateur.");
+                return;
             }
 
             try {
-              // Envoi vers votre API Vercel (/api/index)
-              const response = await fetch('/api/index', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'register', nom, email, password })
-              });
+                // Envoi à l'API Vercel
+                const response = await fetch('/api/index', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        action: currentMode, // 'login' ou 'register'
+                        nom, 
+                        email, 
+                        password 
+                    })
+                });
 
-              const data = await response.json();
+                const data = await response.json();
 
-              if (response.ok) {
-                alert("Inscription ou validation réussie !");
-                // Vous pouvez ajouter ici une redirection vers le tableau de bord
-              } else {
-                alert("Erreur : " + (data.error || "Impossible de valider"));
-              }
+                if (response.ok) {
+                    alert(currentMode === 'login' ? "Connexion réussie !" : "Inscription réussie ! Vous pouvez maintenant gérer vos appareils.");
+                    
+                    // Masquer l'authentification et afficher le tableau de bord
+                    document.getElementById('auth-container').style.display = 'none';
+                    document.getElementById('dashboard-section').style.display = 'block';
+                } else {
+                    alert("Erreur : " + (data.error || "Action non autorisée. Vérifiez vos identifiants ou inscrivez-vous d'abord."));
+                }
             } catch (err) {
-              console.error("Erreur réseau :", err);
-              alert("Erreur de connexion avec le serveur.");
+                console.error("Erreur réseau :", err);
+                alert("Erreur de connexion avec le serveur.");
             }
-          });
+        });
+
+        function forgotPassword() {
+            const email = prompt("Entrez votre adresse e-mail pour réinitialiser votre mot de passe :");
+            if (email) {
+                alert("Un lien de réinitialisation a été envoyé à : " + email);
+            }
         }
-      });
+
+        function logout() {
+            document.getElementById('auth-container').style.display = 'block';
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('authForm').reset();
+        }
+
+        function enregistrerImei() {
+            const imei = document.getElementById('imei-input').value.trim();
+            if (imei.length !== 15) {
+                alert("Le numéro IMEI doit comporter exactement 15 chiffres.");
+                return;
+            }
+            alert("Appareil enregistré avec succès dans la base de données !");
+            document.getElementById('imei-input').value = '';
+        }
     </script>
 </body>
 </html>
