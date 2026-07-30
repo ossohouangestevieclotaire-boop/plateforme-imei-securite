@@ -3,501 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plateforme Nationale de Sécurité & Traçabilité IMEI</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Sécurité Nationale - IMEI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0f172a;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #f87171;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: #fff;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        .btn-valider {
+            width: 100%;
+            padding: 12px;
+            background-color: #059669;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-valider:hover {
+            background-color: #047857;
+        }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
+<body>
 
-    <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 sticky top-0 z-50 shadow-lg">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div id="logoClickArea" class="flex items-center gap-3 cursor-pointer select-none">
-                <div class="bg-indigo-600 p-2.5 rounded-xl text-white shadow-md shadow-indigo-500/20">
-                    <i class="fa-solid fa-shield-halved text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tight text-white">SÉCURITÉ NATIONALE • IMEI</h1>
-                    <p class="text-xs text-slate-400">Système Souverain de Traçabilité et de Lutte contre le Vol</p>
-                </div>
+    <div class="container">
+        <h2>Inscription / Connexion</h2>
+        <form id="authForm">
+            <div class="form-group">
+                <label>Nom d'utilisateur</label>
+                <input type="text" id="username" placeholder="REDMI" required>
             </div>
-            <div class="flex items-center gap-3">
-                <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-xs text-slate-300">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Sécurisé en Ligne</span>
-                </div>
-                <button id="exitAdminBtn" class="hidden bg-rose-600/20 text-rose-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-rose-500/30 transition">
-                    Quitter l'Admin
-                </button>
+            
+            <div class="form-group">
+                <label>Adresse E-mail</label>
+                <input type="email" id="email" placeholder="votre@email.com" required>
             </div>
-        </div>
-    </header>
-
-    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-1 space-y-6">
-            <div class="bg-slate-900/85 backdrop-blur border border-slate-800 rounded-2xl p-5 shadow-xl">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-user-shield text-indigo-400"></i> Espace Citoyen
-                    </h2>
-                    <span id="currentUserBadge" class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/30">Non connecté</span>
-                </div>
-
-                <div id="loginSection" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Nom d'utilisateur</label>
-                        <input type="text" id="loginUsername" placeholder="Ex: kassi.kouadio" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Mot de passe</label>
-                        <input type="password" id="loginPassword" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <div class="flex justify-between items-center text-xs">
-                        <button id="toForgotBtn" type="button" class="text-indigo-400 hover:underline">Mot de passe oublié ?</button>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button id="toRegisterBtn" type="button" class="bg-slate-800 text-slate-200 py-2.5 rounded-xl text-xs font-semibold">S'inscrire</button>
-                        <button id="loginBtn" type="button" class="bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-xl text-xs font-semibold shadow-lg">Se connecter</button>
-                    </div>
-                </div>
-
-                <div id="registerSection" class="hidden space-y-4">
-                    <p class="text-xs text-indigo-300 font-semibold mb-2"><i class="fa-solid fa-user-plus"></i> Inscription</p>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Nom d'utilisateur</label>
-                        <input type="text" id="regUsername" placeholder="Ex: kassi.kouadio" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Adresse E-mail</label>
-                        <input type="email" id="regEmail" placeholder="nom@exemple.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Mot de passe</label>
-                        <input type="password" id="regPassword" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button id="backLoginFromReg" type="button" class="bg-slate-800 text-slate-200 py-2.5 rounded-xl text-xs font-semibold">Retour</button>
-                        <button id="registerSubmitBtn" type="button" class="bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-semibold">Valider</button>
-                    </div>
-                </div>
-
-                <div id="forgotSection" class="hidden space-y-4">
-                    <p class="text-xs text-amber-400 font-semibold mb-2"><i class="fa-solid fa-key"></i> Récupération</p>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Votre E-mail</label>
-                        <input type="email" id="forgotEmail" placeholder="nom@exemple.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button id="backLoginFromForgot" type="button" class="bg-slate-800 text-slate-200 py-2.5 rounded-xl text-xs font-semibold">Annuler</button>
-                        <button id="forgotSubmitBtn" type="button" class="bg-amber-600 text-white py-2.5 rounded-xl text-xs font-semibold">Envoyer</button>
-                    </div>
-                </div>
-
-                <div id="logoutSection" class="hidden space-y-3 pt-2">
-                    <p class="text-xs text-slate-400">Connecté : <strong id="activeUserText" class="text-white"></strong></p>
-                    <button id="logoutBtn" type="button" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 py-2 rounded-xl text-xs font-semibold">Se déconnecter</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="lg:col-span-2 space-y-6">
-            <div id="citoyenView" class="space-y-6">
-                <!-- Section Vérification Publique (Libre d'accès) -->
-                <div class="bg-slate-900/85 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
-                    <h3 class="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-magnifying-glass text-indigo-400"></i> Vérification Publique & Historique GPS d'un IMEI
-                    </h3>
-                    <div class="flex gap-2">
-                        <input type="text" id="searchImeiInput" value="351209350057636" placeholder="Entrez un IMEI..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
-                        <button id="searchImeiBtn" type="button" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition shadow-lg">Vérifier</button>
-                    </div>
-                    <div id="searchResultBox" class="mt-4 hidden p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 space-y-3"></div>
-                </div>
-
-                <!-- Section Enregistrement (Nécessite connexion) -->
-                <div class="bg-slate-900/85 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
-                    <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-mobile-screen-button text-indigo-400"></i> Enregistrer ou Déclarer un Appareil
-                    </h2>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1">Numéro IMEI</label>
-                            <input type="text" id="deviceImei" placeholder="Ex: 351209350057636" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1">Statut de l'Appareil</label>
-                            <select id="deviceStatus" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white">
-                                <option value="ACTIF">ACTIF (En possession)</option>
-                                <option value="VOLE">🚨 SIGNALÉ VOLÉ</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1">Latitude (GPS)</label>
-                            <input type="text" id="deviceLat" placeholder="Ex: 5.3600" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1">Longitude (GPS)</label>
-                            <input type="text" id="deviceLon" placeholder="Ex: -4.0083" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white">
-                        </div>
-                    </div>
-
-                    <div class="flex gap-3">
-                        <button id="saveDeviceBtn" type="button" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-sm font-semibold transition shadow-lg flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-cloud-arrow-up"></i> Enregistrer / Mettre à jour l'appareil
-                        </button>
-                        <button id="gpsBtn" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-3 rounded-xl text-xs font-medium border border-slate-700" title="Utiliser ma position GPS actuelle">
-                            <i class="fa-solid fa-location-crosshairs text-emerald-400"></i> Ma Position
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Liste des appareils de l'utilisateur -->
-                <div class="bg-slate-900/85 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-list text-indigo-400"></i> Mes Appareils Enregistrés
-                        </h3>
-                        <button id="refreshUserDevicesBtn" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-lg text-xs border border-slate-700">Actualiser</button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs text-slate-300">
-                            <thead class="bg-slate-950 border-b border-slate-800 text-slate-400">
-                                <tr>
-                                    <th class="p-2.5">IMEI</th>
-                                    <th class="p-2.5">Statut</th>
-                                    <th class="p-2.5">GPS Actuel</th>
-                                    <th class="p-2.5">Action Carte</th>
-                                </tr>
-                            </thead>
-                            <tbody id="userDevicesTableBody" class="divide-y divide-slate-800">
-                                <tr><td colspan="4" class="p-3 text-center text-slate-500">Connectez-vous pour voir vos appareils.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" id="password" placeholder="********" required>
             </div>
 
-            <!-- Vue Admin -->
-            <div id="adminView" class="hidden space-y-6">
-                <div class="bg-slate-900/85 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-xl">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-chart-line text-indigo-400"></i> Tableau de Bord Administrateur
-                        </h2>
-                        <button id="refreshAdminBtn" type="button" class="bg-indigo-600/20 text-indigo-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-500/30">Actualiser</button>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                            <p class="text-xs text-slate-400">Total Utilisateurs</p>
-                            <p id="statTotalUsers" class="text-2xl font-bold text-white mt-1">0</p>
-                        </div>
-                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                            <p class="text-xs text-slate-400">Total Appareils</p>
-                            <p id="statTotalDevices" class="text-2xl font-bold text-indigo-400 mt-1">0</p>
-                        </div>
-                    </div>
-
-                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Registre Central</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs text-slate-300">
-                            <thead class="bg-slate-950 border-b border-slate-800 text-slate-400">
-                                <tr>
-                                    <th class="p-3">IMEI</th>
-                                    <th class="p-3">Propriétaire</th>
-                                    <th class="p-3">Statut</th>
-                                    <th class="p-3">Dernière Position GPS</th>
-                                    <th class="p-3">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="devicesTableBody" class="divide-y divide-slate-800"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Modal Admin -->
-    <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl space-y-4">
-            <h3 class="text-base font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-lock text-rose-500"></i> Accès Admin
-            </h3>
-            <div>
-                <label class="block text-xs font-medium text-slate-400 mb-1">Identifiant</label>
-                <input type="text" id="adminUser" value="admin" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white">
-            </div>
-            <div>
-                <label class="block text-xs font-medium text-slate-400 mb-1">Mot de passe</label>
-                <input type="password" id="adminPass" value="SecuriteAdmin2026*" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white">
-            </div>
-            <div class="grid grid-cols-2 gap-2 pt-2">
-                <button id="closeAdminModalBtn" type="button" class="bg-slate-800 text-slate-300 py-2 rounded-xl text-xs font-semibold">Annuler</button>
-                <button id="submitAdminLoginBtn" type="button" class="bg-rose-600 text-white py-2 rounded-xl text-xs font-semibold">Entrer</button>
-            </div>
-        </div>
+            <button type="submit" class="btn-valider">Valider</button>
+        </form>
     </div>
 
+    <!-- Script JavaScript pour rendre le bouton fonctionnel avec l'API Vercel -->
     <script>
-        let currentUsername = null;
-        let logoClickCount = 0;
-        let logoClickTimer = null;
+      document.addEventListener('DOMContentLoaded', () => {
+        const authForm = document.getElementById('authForm');
+        
+        if (authForm) {
+          authForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Empêche le rechargement de la page
 
-        function getApiUrl() {
-            return window.location.origin + '/api';
-        }
+            const nom = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('logoClickArea').addEventListener('click', () => {
-                logoClickCount++;
-                clearTimeout(logoClickTimer);
-                logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 2000);
-                if (logoClickCount >= 5) {
-                    logoClickCount = 0;
-                    document.getElementById('adminModal').classList.remove('hidden');
-                }
-            });
-
-            document.getElementById('closeAdminModalBtn').addEventListener('click', () => document.getElementById('adminModal').classList.add('hidden'));
-            document.getElementById('submitAdminLoginBtn').addEventListener('click', verifyAdminLogin);
-            document.getElementById('exitAdminBtn').addEventListener('click', exitAdminView);
-
-            document.getElementById('toRegisterBtn').addEventListener('click', () => showSection('registerSection'));
-            document.getElementById('toForgotBtn').addEventListener('click', () => showSection('forgotSection'));
-            document.getElementById('backLoginFromReg').addEventListener('click', () => showSection('loginSection'));
-            document.getElementById('backLoginFromForgot').addEventListener('click', () => showSection('loginSection'));
-
-            document.getElementById('loginBtn').addEventListener('click', handleLogin);
-            document.getElementById('registerSubmitBtn').addEventListener('click', handleRegister);
-            document.getElementById('forgotSubmitBtn').addEventListener('click', handleForgotPassword);
-            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
-
-            document.getElementById('saveDeviceBtn').addEventListener('click', registerOrUpdateDevice);
-            document.getElementById('gpsBtn').addEventListener('click', autoFillGps);
-            document.getElementById('searchImeiBtn').addEventListener('click', searchImei);
-            document.getElementById('refreshUserDevicesBtn').addEventListener('click', loadUserDevices);
-            document.getElementById('refreshAdminBtn').addEventListener('click', loadAdminData);
-        });
-
-        function showSection(sectionId) {
-            document.getElementById('loginSection').classList.add('hidden');
-            document.getElementById('registerSection').classList.add('hidden');
-            document.getElementById('forgotSection').classList.add('hidden');
-            document.getElementById(sectionId).classList.remove('hidden');
-        }
-
-        function autoFillGps() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        document.getElementById('deviceLat').value = pos.coords.latitude.toFixed(4);
-                        document.getElementById('deviceLon').value = pos.coords.longitude.toFixed(4);
-                        alert('Position GPS récupérée !');
-                    },
-                    () => alert('Erreur de géolocalisation.')
-                );
+            if (!email || !password || !nom) {
+              alert("Veuillez remplir tous les champs obligatoires.");
+              return;
             }
-        }
 
-        async function handleRegister() {
-            const username = document.getElementById('regUsername').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPassword').value.trim();
-            if (!username || !email || !password) return alert('Tous les champs sont requis.');
-
-            const res = await fetch(`${getApiUrl()}?action=register`, {
+            try {
+              // Envoi vers votre API Vercel (/api/index)
+              const response = await fetch('/api/index', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password })
-            });
-            const data = await res.json();
-            if (res.ok) {
-                alert('Inscription réussie ! Vous pouvez vous connecter.');
-                showSection('loginSection');
-            } else { alert(data.error); }
-        }
+                body: JSON.stringify({ action: 'register', nom, email, password })
+              });
 
-        async function handleLogin() {
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
-            const res = await fetch(`${getApiUrl()}?action=login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
-            const data = await res.json();
-            if (res.ok) {
-                currentUsername = username;
-                document.getElementById('currentUserBadge').textContent = 'Connecté';
-                document.getElementById('currentUserBadge').className = 'text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-500/30';
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('logoutSection').classList.remove('hidden');
-                document.getElementById('activeUserText').textContent = username;
-                loadUserDevices();
-                alert('Connexion réussie !');
-            } else { alert(data.error); }
-        }
+              const data = await response.json();
 
-        async function handleForgotPassword() {
-            const email = document.getElementById('forgotEmail').value.trim();
-            const res = await fetch(`${getApiUrl()}?action=forgot-password`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email })
-            });
-            const data = await res.json();
-            alert(res.ok ? data.message : data.error);
-            if (res.ok) showSection('loginSection');
-        }
-
-        function handleLogout() {
-            currentUsername = null;
-            document.getElementById('currentUserBadge').textContent = 'Non connecté';
-            document.getElementById('currentUserBadge').className = 'text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/30';
-            document.getElementById('logoutSection').classList.add('hidden');
-            document.getElementById('loginSection').classList.remove('hidden');
-            document.getElementById('userDevicesTableBody').innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-500">Connectez-vous pour voir vos appareils.</td></tr>`;
-            alert('Déconnecté.');
-        }
-
-        async function registerOrUpdateDevice() {
-            if (!currentUsername) return alert('Veuillez vous connecter pour enregistrer ou modifier un appareil.');
-            const imei = document.getElementById('deviceImei').value.trim();
-            const status = document.getElementById('deviceStatus').value;
-            const latitude = document.getElementById('deviceLat').value.trim();
-            const longitude = document.getElementById('deviceLon').value.trim();
-
-            if (!imei) return alert('IMEI requis.');
-
-            const res = await fetch(getApiUrl(), {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ imei, status, latitude: latitude ? parseFloat(latitude) : null, longitude: longitude ? parseFloat(longitude) : null, owner: currentUsername })
-            });
-            if (res.ok) {
-                alert('Appareil enregistré / mis à jour avec succès !');
-                loadUserDevices();
-            } else { alert('Erreur lors de la mise à jour.'); }
-        }
-
-        async function loadUserDevices() {
-            if (!currentUsername) return;
-            const res = await fetch(`${getApiUrl()}?userOwner=${currentUsername}`);
-            const data = await res.json();
-            const tbody = document.getElementById('userDevicesTableBody');
-            tbody.innerHTML = '';
-
-            if (res.ok && data.devices && data.devices.length > 0) {
-                data.devices.forEach(dev => {
-                    let mapsBtn = dev.latitude ? `<a href="https://www.google.com/maps?q=${dev.latitude},${dev.longitude}" target="_blank" class="text-indigo-400 hover:underline font-semibold"><i class="fa-solid fa-map-pin"></i> Voir</a>` : 'Non localisé';
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="p-2.5 font-mono text-indigo-300">${dev.imei}</td>
-                        <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${dev.status === 'VOLE' ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}">${dev.status}</span></td>
-                        <td class="p-2.5 font-mono text-xs">${dev.latitude ? dev.latitude + ', ' + dev.longitude : '---'}</td>
-                        <td class="p-2.5">${mapsBtn}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } else {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-500">Aucun appareil enregistré à votre nom.</td></tr>`;
+              if (response.ok) {
+                alert("Inscription ou validation réussie !");
+                // Vous pouvez ajouter ici une redirection vers le tableau de bord
+              } else {
+                alert("Erreur : " + (data.error || "Impossible de valider"));
+              }
+            } catch (err) {
+              console.error("Erreur réseau :", err);
+              alert("Erreur de connexion avec le serveur.");
             }
+          });
         }
-
-        async function searchImei() {
-            const imei = document.getElementById('searchImeiInput').value.trim();
-            const box = document.getElementById('searchResultBox');
-            if (!imei) return alert('Entrez un IMEI.');
-
-            const res = await fetch(`${getApiUrl()}?imei=${imei}`);
-            const data = await res.json();
-            box.classList.remove('hidden');
-            if (res.ok) {
-                let mapsLink = data.latitude && data.longitude 
-                    ? `<a href="https://www.google.com/maps?q=${data.latitude},${data.longitude}" target="_blank" class="inline-flex items-center gap-1.5 text-indigo-400 hover:underline font-semibold bg-indigo-950 px-3 py-1.5 rounded-lg border border-indigo-800 mt-2"><i class="fa-solid fa-map-location-dot"></i> Voir le lieu sur Google Maps</a>`
-                    : '<span class="text-slate-500">Aucune position GPS disponible</span>';
-
-                let historyHtml = '<div class="mt-3 border-t border-slate-800 pt-2"><p class="text-xs font-semibold text-slate-400 mb-1">Historique des positions GPS :</p>';
-                if (data.history && data.history.length > 0) {
-                    historyHtml += '<ul class="space-y-1 text-[11px] font-mono">';
-                    data.history.forEach((h) => {
-                        let timeStr = new Date(h.time).toLocaleTimeString();
-                        historyHtml += `<li><span class="text-slate-500">[${timeStr}]</span> Lat: ${h.latitude}, Lon: ${h.longitude} <a href="https://www.google.com/maps?q=${h.latitude},${h.longitude}" target="_blank" class="text-indigo-400 hover:underline ml-2">(Carte)</a></li>`;
-                    });
-                    historyHtml += '</ul>';
-                } else {
-                    historyHtml += '<p class="text-slate-500 text-[11px]">Aucun historique.</p>';
-                }
-                historyHtml += '</div>';
-
-                box.innerHTML = `
-                    <p class="text-emerald-400 font-semibold mb-1"><i class="fa-solid fa-circle-check"></i> Fiche Appareil :</p>
-                    <p><strong>IMEI :</strong> ${data.imei}</p>
-                    <p><strong>Propriétaire :</strong> ${data.owner}</p>
-                    <p><strong>Statut :</strong> <span class="${data.status === 'VOLE' ? 'text-rose-400 font-bold' : 'text-emerald-400'}">${data.status}</span></p>
-                    <p><strong>Dernière Position :</strong> ${data.latitude ? data.latitude + ', ' + data.longitude : 'Non localisé'}</p>
-                    <div>${mapsLink}</div>
-                    ${historyHtml}
-                `;
-            } else {
-                box.innerHTML = `<p class="text-rose-400">Appareil introuvable dans le registre.</p>`;
-            }
-        }
-
-        async function verifyAdminLogin() {
-            const adminUser = document.getElementById('adminUser').value.trim();
-            const adminPass = document.getElementById('adminPass').value.trim();
-            const res = await fetch(`${getApiUrl()}?action=admin-login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ adminUser, adminPass })
-            });
-            if (res.ok) {
-                document.getElementById('adminModal').classList.add('hidden');
-                document.getElementById('citoyenView').classList.add('hidden');
-                document.getElementById('adminView').classList.remove('hidden');
-                document.getElementById('exitAdminBtn').classList.remove('hidden');
-                loadAdminData();
-                alert('Accès admin accordé.');
-            } else { alert('Accès refusé.'); }
-        }
-
-        function exitAdminView() {
-            document.getElementById('adminView').classList.add('hidden');
-            document.getElementById('exitAdminBtn').classList.add('hidden');
-            document.getElementById('citoyenView').classList.remove('hidden');
-        }
-
-        async function loadAdminData() {
-            const res = await fetch(getApiUrl());
-            const data = await res.json();
-            if (res.ok) {
-                document.getElementById('statTotalUsers').textContent = data.totalUsers || 0;
-                document.getElementById('statTotalDevices').textContent = data.totalDevices || 0;
-                const tbody = document.getElementById('devicesTableBody');
-                tbody.innerHTML = '';
-                if (data.devices && data.devices.length > 0) {
-                    data.devices.forEach(dev => {
-                        let mapsBtn = dev.latitude ? `<a href="https://www.google.com/maps?q=${dev.latitude},${dev.longitude}" target="_blank" class="text-indigo-400 hover:underline font-semibold"><i class="fa-solid fa-map-pin"></i> Voir</a>` : 'Non localisé';
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td class="p-3 font-mono text-indigo-300">${dev.imei}</td>
-                            <td class="p-3">${dev.owner}</td>
-                            <td class="p-3"><span class="px-2 py-1 rounded text-[10px] font-bold ${dev.status === 'VOLE' ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}">${dev.status}</span></td>
-                            <td class="p-3 font-mono text-xs">${dev.latitude ? dev.latitude + ', ' + dev.longitude : '---'}</td>
-                            <td class="p-3">${mapsBtn}</td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                } else {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500">Aucun appareil.</td></tr>`;
-                }
-            }
-        }
+      });
     </script>
 </body>
 </html>
