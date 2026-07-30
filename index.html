@@ -12,16 +12,15 @@
             margin: 0;
             padding: 20px;
         }
-        .container {
-            max-width: 500px;
+        .container, .dashboard-container {
+            max-width: 800px;
             margin: 40px auto;
             background: #1e293b;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-        h2 {
-            margin-bottom: 20px;
+        h2, h3 {
             color: #f87171;
             text-align: center;
         }
@@ -51,7 +50,7 @@
             font-size: 14px;
             color: #94a3b8;
         }
-        input {
+        input, select {
             width: 100%;
             padding: 10px;
             border: 1px solid #334155;
@@ -88,22 +87,33 @@
         .options-links a:hover {
             text-decoration: underline;
         }
-        /* Dashboard caché par défaut */
+        /* Tableau de bord */
         #dashboard-section {
             display: none;
         }
-        .dashboard-container {
-            max-width: 800px;
-            margin: 40px auto;
-            background: #1e293b;
-            padding: 30px;
-            border-radius: 12px;
+        table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+            background: #0f172a;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+            font-size: 14px;
+        }
+        th {
+            background-color: #1e293b;
+            color: #f87171;
         }
     </style>
 </head>
 <body>
 
-    <!-- SECTION AUTHENTIFICATION (Connexion / Inscription) -->
+    <!-- SECTION AUTHENTIFICATION -->
     <div class="container" id="auth-container">
         <h2 id="form-title">Connexion</h2>
         
@@ -136,10 +146,10 @@
         </form>
     </div>
 
-    <!-- SECTION TABLEAU DE BORD (S'affiche après connexion/inscription réussie) -->
+    <!-- SECTION TABLEAU DE BORD -->
     <div class="dashboard-container" id="dashboard-section">
         <h2>Espace de Sécurité & Suivi IMEI</h2>
-        <p id="welcome-msg">Bienvenue sur votre tableau de bord souverain.</p>
+        <p id="welcome-msg" style="text-align: center; color: #94a3b8;">Bienvenue sur votre tableau de bord souverain.</p>
         
         <div style="margin-top: 20px; background: #0f172a; padding: 20px; border-radius: 8px;">
             <h3>Enregistrer ou Déclarer un Appareil</h3>
@@ -147,17 +157,44 @@
                 <label>Numéro IMEI (15 chiffres)</label>
                 <input type="text" id="imei-input" placeholder="Ex: 351209350057636" maxlength="15">
             </div>
+            <div class="form-group">
+                <label>Statut de l'Appareil</label>
+                <select id="statut-input">
+                    <option value="ACTIF (En possession)">ACTIF (En possession)</option>
+                    <option value="SIGNALÉ VOLÉ">SIGNALÉ VOLÉ</option>
+                </select>
+            </div>
             <button class="btn-valider" onclick="enregistrerImei()" style="background-color: #2563eb;">Enregistrer / Mettre à jour l'appareil</button>
         </div>
 
-        <div style="margin-top: 20px; text-align: right;">
-            <button onclick="logout()" style="background: #dc2626; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">Se Déconnecter</button>
+        <div style="margin-top: 30px;">
+            <h3>Mes Appareils Enregistrés & Positions GPS</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>IMEI</th>
+                        <th>Statut</th>
+                        <th>Position GPS Actuelle</th>
+                        <th>Action / Carte</th>
+                    </tr>
+                </thead>
+                <tbody id="devices-table-body">
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #94a3b8;">Aucun appareil enregistré pour l'instant.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 25px; text-align: right;">
+            <button onclick="logout()" style="background: #dc2626; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold;">Se Déconnecter</button>
         </div>
     </div>
 
     <!-- SCRIPT DE GESTION -->
     <script>
-        let currentMode = 'login'; // 'login' ou 'register'
+        let currentMode = 'login';
+        let mesAppareils = []; // Liste dynamique des appareils
 
         function switchMode(mode) {
             currentMode = mode;
@@ -182,10 +219,8 @@
             }
         }
 
-        // Gestion de la soumission du formulaire (Connexion / Inscription)
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
             const nom = document.getElementById('username').value.trim();
@@ -199,38 +234,28 @@
                 const response = await fetch('/api/index', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        action: currentMode, 
-                        nom, 
-                        email, 
-                        password 
-                    })
+                    body: JSON.stringify({ action: currentMode, nom, email, password })
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    alert(currentMode === 'login' ? "Connexion réussie !" : "Inscription réussie ! Vous pouvez maintenant gérer vos appareils.");
-                    
+                    alert(currentMode === 'login' ? "Connexion réussie !" : "Inscription réussie !");
                     if (data.nom) {
                         document.getElementById('welcome-msg').innerText = `Bienvenue, ${data.nom} sur votre tableau de bord.`;
                     }
-
-                    // Basculer vers le tableau de bord
                     document.getElementById('auth-container').style.display = 'none';
                     document.getElementById('dashboard-section').style.display = 'block';
                 } else {
-                    alert("Erreur : " + (data.error || "Action non autorisée. Veuillez vérifier vos identifiants ou vous inscrire."));
+                    alert("Erreur : " + (data.error || "Action non autorisée."));
                 }
             } catch (err) {
-                console.error("Erreur réseau :", err);
                 alert("Erreur de connexion avec le serveur.");
             }
         });
 
-        // Gestion du mot de passe oublié relié à l'API
         async function forgotPassword() {
-            const email = prompt("Entrez votre adresse e-mail enregistrée pour recevoir le lien de réinitialisation :");
+            const email = prompt("Entrez votre e-mail pour réinitialiser votre mot de passe :");
             if (!email) return;
 
             try {
@@ -239,15 +264,9 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'forgot-password', email })
                 });
-
                 const data = await response.json();
-                if (response.ok) {
-                    alert(data.message);
-                } else {
-                    alert("Erreur : " + (data.error || "Impossible d'envoyer le lien."));
-                }
+                alert(response.ok ? data.message : "Erreur : " + data.error);
             } catch (err) {
-                console.error("Erreur réseau :", err);
                 alert("Erreur de connexion avec le serveur.");
             }
         }
@@ -260,12 +279,42 @@
 
         function enregistrerImei() {
             const imei = document.getElementById('imei-input').value.trim();
+            const statut = document.getElementById('statut-input').value;
+
             if (imei.length !== 15) {
                 alert("Le numéro IMEI doit comporter exactement 15 chiffres.");
                 return;
             }
-            alert("Appareil enregistré avec succès dans la base de données !");
+
+            // Simulation d'une position GPS récupérée (ex: coordonnées de Dabou / Côte d'Ivoire)
+            const gpsActuel = "5.3265, -4.3830 (Dabou)";
+
+            // Ajout à la liste locale
+            mesAppareils.push({ imei, statut, gps: gpsActuel });
+            
+            alert("Appareil enregistré et position GPS synchronisée !");
             document.getElementById('imei-input').value = '';
+            mettreAJourTableau();
+        }
+
+        function mettreAJourTableau() {
+            const tbody = document.getElementById('devices-table-body');
+            if (mesAppareils.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Aucun appareil enregistré pour l'instant.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            mesAppareils.forEach(app => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${app.imei}</td>
+                    <td style="color: ${app.statut.includes('VOLÉ') ? '#f87171' : '#34d399'}; font-weight: bold;">${app.statut}</td>
+                    <td>${app.gps}</td>
+                    <td><a href="https://maps.google.com/?q=5.3265,-4.3830" target="_blank" style="color: #38bdf8; text-decoration: none;">Voir sur la carte</a></td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
     </script>
 </body>
